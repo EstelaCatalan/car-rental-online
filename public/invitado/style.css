@@ -1,0 +1,75 @@
+.ok {
+  color: green;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.info {
+  color: blue;
+  font-weight: bold;
+}
+
+ul {
+  margin: 0;
+  padding: 10px;
+  border-bottom: 1px solid;
+  list-style-type: none;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  flex:auto;
+  padding:10px;
+}
+
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+  justify-content:space-between;
+}
+label {
+  font-weight: bold;
+}
+
+input,
+textarea {
+  padding: 5px;
+  width: 100%;
+
+}
+input:not(.boton):hover{
+  background-color: azure;
+}
+
+.botondiv{
+  text-align: center;
+}
+.boton {
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: #F8F0E5;
+  margin: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+  width: min-content;
+}
+.boton:hover {
+  background-color: #AA8F78;
+  
+}
+
+.obligatorio {
+  font-size: smaller;
+  font-weight:bold;
+  margin-bottom: 10px;
+
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Car Rental Online Web Site</title>
+    <link rel="stylesheet" href="../style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Car Rental Online</h1>
+            <nav>
+                <a href="listar-vehiculos.html">Vehiculos</a>
+                <a href="../index.html">Salir</a>
+            </nav>
+        </header>
+        <ul>
+            <li><b class="ok">Ok</b></li>
+            <li><b class="error">Error</b></li>
+            <li><b class="info">Info</b></li>
+        </ul>
+        <section>
+            <article>
+                <header>
+                    <h2>Perfil Empleado</h2>
+                </header>
+                <div class="Registro">
+                    <form class="form" method="get"
+                        action="http://localhost:3000/car-rental-online/empleado/perfil.html">
+                        <div class="fila">
+                            <div class="columna">
+                                
+                                    <p class="dni"><b>DNI</b><br>
+                                        12345678A</p>
+                               
+                            </div>
+                        </div>
+                        <div class="fila">
+                            <div class="columna">
+                                <label for="clienteNombres">Nombres*:</label>
+                                <input type="text" id="clienteNombres" name="clienteNombres" pattern="[A-Za-z ]{2-20}"
+                                    required placeholder="Ingrese nombres">
+                            </div>
+                            <div class="columna">
+                                <label for="clienteApellidos">Apellidos*:</label>
+                                <input type="text" id="clienteApellidos" name="clienteApellidos"
+                                    pattern="[A-Za-z ]{2-20}" required placeholder="Ingrese apellidos">
+                            </div>
+                        </div>
+                        <div class="fila">
+                            <div class="columna">
+                                <label for="clienteEmail">Correo electrónico*:</label>
+                                <input type="email" id="clienteEmail" name="clienteEmail" required
+                                    placeholder="Ingrese email">
+                            </div>
+                            <div class="columna">
+                                <label for="clienteTelefono">Teléfono*:</label>
+                                <input type="tel" id="clienteTelefono" name="clienteTelefono" pattern="[0-9]+" required
+                                    placeholder="Ingrese teléfono">
+                            </div>
+                        </div>
+                        <div class="fila">
+                            <div class="columna">
+                                <label for="clienteDireccion">Dirección*:</label>
+                                <textarea id="clienteDireccion" name="clienteDireccion" rows="3"
+                                    placeholder="Ingrese dirección"></textarea>
+                            </div>
+                        </div>
+                        <div class="fila">
+                            <div class="columna">
+                                <label for="clientePassword">Contraseña*:</label>
+                                <input type="password" id="clientePassword" name="clientePassword"
+                                    placeholder="Ingrese contraseña" required>
+                                <span class="obligatorio">*Campos obligatorios</span>
+                            </div>
+                            <div class="columna">
+                                <label for="clientePassword2">Repita la contraseña*:</label>
+                                <input type="password" id="clientePassword2" name="clientePassword2"
+                                    placeholder="Repita contraseña" required>
+                            </div>
+                        </div>
+                        <div class="botondiv">
+                            <input class="boton" type="submit" value="Guardar">
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </section>
+    </main>
+    <div>
+        <footer>
+            <p> Tecnologias y Sistemas Web</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
+</body>
+
+</html>
