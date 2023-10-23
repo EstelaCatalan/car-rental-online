@@ -5,8 +5,7 @@ app.get('/', (req, res) => {
  res.send('Hello World!')
 })
 const path = require('path')
-app.use('/car-rental-online', express.static(path.join(__dirname,
-'public')))
+app.use('/car-rental-online', express.static(path.join(__dirname,'public')))
 app.listen(port, () => {
  console.log(`Car Rental Online listening on port ${port}`)
 })

@@ -4,12 +4,15 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test-model": ".\\node_modules\\.bin\\mocha .\\test\\model\\**\\*.js --reporter spec"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
     "path": "^0.12.7"
   }
 }
