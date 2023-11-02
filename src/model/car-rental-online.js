@@ -110,4 +110,49 @@ class CarRentalOnline {
     signout(){
         this._usuario=null;
     }
+    perfil(){
+        if(this.usuario!=null){
+            return this.usuario
+        }
+        else{
+            throw new Error("No ha iniciado sesión ningún usuario")
+        }
+    }
+    clienteByEmail(email){
+        const clienteExistente = this._clientes.find(cliente => cliente.email ===email);
+        if(clienteExistente){
+            return cliente
+        }
+        else{
+            throw new Error("El cliente con email"+email+" no existe")
+        }
+    }
+    empleadoByEmail(email){
+        const empleadoExistente = this._clientes.find(empleado => empleado.email ===email);
+        if(empleadoExistente){
+            return empleado
+        }
+        else{
+            throw new Error("El empleado con email"+email+" no existe")
+        }
+    }
+    clienteById(id){
+        const clienteExistente = this._clientes.find(cliente => cliente.id ===id);
+        if(clienteExistente){
+            return cliente
+        }
+        else{
+            throw new Error("El cliente con id"+id+" no existe")
+        }
+    }
+    empleadoByid(id){
+        const empleadoExistente = this._clientes.find(empleado => empleado.id ===id);
+        if(empleadoExistente){
+            return empleado
+        }
+        else{
+            throw new Error("El empleado con id"+id+" no existe")
+        }
+    }
 }
+module.exports=CarRentalOnline;
