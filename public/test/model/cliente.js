@@ -1,6 +1,4 @@
 
-
-
 describe("cliente", function () {
     let cliente;
     const id = '1';

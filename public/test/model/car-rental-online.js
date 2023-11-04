@@ -1,6 +1,4 @@
-const assert = require("chai").assert;
-const CarRentalOnline = require("../../src/model/car-rental-online");
-const { expect } = require('chai');
+
 describe("car-rental-online", function () {
     let carrentalonline;
     let vehiculos = new Array();
