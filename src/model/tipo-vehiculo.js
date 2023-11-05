@@ -3,5 +3,6 @@ const TipoVehiculo ={
     B:'B',
     C:'C',
     D:'D',
+    D:'E',
 }
 module.exports=TipoVehiculo;
