@@ -1,4 +1,3 @@
-
 describe("cliente", function () {
     let cliente;
     const id = '1';
@@ -104,10 +103,6 @@ describe("cliente", function () {
         const telefono2='2222222222222'
         empleado._telefono=telefono2;
         assert.equal(empleado._telefono,telefono2);
-
     });
-
-    
-
 
 });

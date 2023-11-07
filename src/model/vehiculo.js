@@ -1,4 +1,3 @@
-
 class Vehiculo {
   constructor(_id) {
     this._id = _id;
@@ -13,7 +12,6 @@ class Vehiculo {
     this._descripcion = "";
   }
 
-  // Definir los setters y getters
   get matricula() {
     return this._matricula;
   }

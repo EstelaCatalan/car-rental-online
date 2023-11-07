@@ -1,7 +1,5 @@
 const assert = require("chai").assert;
 const Cliente = require("../../src/model/cliente");
-
-
 describe("cliente", function () {
     let cliente;
     const id = '1';
@@ -109,8 +107,5 @@ describe("cliente", function () {
         assert.equal(cliente._telefono,telefono2);
 
     });
-
-    
-
 
 });

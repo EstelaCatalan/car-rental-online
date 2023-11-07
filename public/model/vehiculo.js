@@ -1,4 +1,3 @@
-
 class Vehiculo {
   constructor(_id) {
     this._id = _id;

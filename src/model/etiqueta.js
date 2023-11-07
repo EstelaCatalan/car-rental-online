@@ -5,4 +5,5 @@ const Etiqueta = {
     CERO:'CERO'
 
 };
+
 module.exports=Etiqueta;

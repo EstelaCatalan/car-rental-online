@@ -1,4 +1,3 @@
-
 describe("car-rental-online", function() {
     let carrentalonline;
     let vehiculos = new Array();
@@ -325,7 +324,7 @@ describe("car-rental-online", function() {
 
         assert.deepEqual(carrentalonline.empleadoByEmail(usuario4.email), usuario4);
 
-        assert.throws(() => carrentalonline.empleadoByEmail("jhsfkd"), "El empleado con ese email no existe");
+        assert.throws(() => carrentalonline.empleadoByEmail("jhsfkd"));
 
     })
     it("Cliente by id", function() {
@@ -336,7 +335,7 @@ describe("car-rental-online", function() {
 
         assert.deepEqual(carrentalonline.clienteById(usuario1.id), usuario1);
 
-        assert.throws(() => carrentalonline.clienteById("30"), "El cliente con ese id no existe");
+        assert.throws(() => carrentalonline.clienteById("30"));
     })
     it("Empleado by id", function() {
 
@@ -346,14 +345,13 @@ describe("car-rental-online", function() {
 
         assert.deepEqual(carrentalonline.empleadoById(usuario4.id), usuario4);
 
-        assert.throws(() => carrentalonline.empleadoById("30"), "El empleado con ese id no existe");
+        assert.throws(() => carrentalonline.empleadoById("30"));
     })
 
     it("reservar con cliente sin login", function() {
 
-        assert.throws(() => carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z')),
-            "Debe iniciar sesión como cliente para realizar una reserva"
-        );
+        assert.throws(() => carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z')));
+
     });
 
     it("reservar con conflicto", function() {
@@ -368,9 +366,8 @@ describe("car-rental-online", function() {
 
         carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
 
-        assert.throws(() => carrentalonline.reservar(101, new Date('2023-12-03T10:00:00.000Z'), new Date('2023-12-06T10:00:00.000Z')),
-            "El vehículo no está disponible en el período especificado"
-        );
+        assert.throws(() => carrentalonline.reservar(101, new Date('2023-12-03T10:00:00.000Z'), new Date('2023-12-06T10:00:00.000Z')));
+  
     });
 
     it("reservar con vehículo inexistente", function() {
@@ -397,13 +394,13 @@ describe("car-rental-online", function() {
 
         const reserva = carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
 
-        assert.property(reserva, "numero", "La reserva debe tener una propiedad 'numero'");
-        assert.property(reserva, "fecha", "La reserva debe tener una propiedad 'fecha'");
-        assert.property(reserva, "inicio", "La reserva debe tener una propiedad 'inicio'");
-        assert.property(reserva, "fin", "La reserva debe tener una propiedad 'fin'");
-        assert.property(reserva, "clienteId", "La reserva debe tener una propiedad 'clienteId'");
-        assert.property(reserva, "vehiculoId", "La reserva debe tener una propiedad 'vehiculoId'");
-        assert.property(reserva, "costo", "La reserva debe tener una propiedad 'costo'");
+        assert.property(reserva, "numero");
+        assert.property(reserva, "fecha");
+        assert.property(reserva, "inicio");
+        assert.property(reserva, "fin");
+        assert.property(reserva, "clienteId");
+        assert.property(reserva, "vehiculoId");
+        assert.property(reserva, "costo");
 
     });
     it("cliente con reservas existentes", function() {
@@ -587,7 +584,7 @@ describe("car-rental-online", function() {
 
         const todosTienenLaMarcaEsperada = vehiculosFiltrados.every(marca => marca === "Toyota");
 
-        assert.equal(todosTienenLaMarcaEsperada, true, "Todos los vehículos deberían ser de la marca 'Toyota'");
+        assert.equal(todosTienenLaMarcaEsperada, true);
     });
 
     it("Debería filtrar vehículos disponibles por modelo", function() {

@@ -1,6 +1,3 @@
-
-
-
 describe("empleado", function () {
     let empleado;
     const id = '1';

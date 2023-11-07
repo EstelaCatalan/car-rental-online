@@ -109,7 +109,4 @@ describe("usuario", function () {
 
     });
 
-    
-
-
 });

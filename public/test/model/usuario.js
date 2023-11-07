@@ -1,5 +1,3 @@
-
-
 describe("usuario", function () {
     let usuario;
     const id = '1';

@@ -1,4 +1,3 @@
-
 class CarRentalOnline {
 	_vehiculos
 	_clientes
@@ -360,5 +359,3 @@ class CarRentalOnline {
 	}
 
 }
-
-module.exports = CarRentalOnline;
