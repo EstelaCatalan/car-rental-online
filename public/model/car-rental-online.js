@@ -55,12 +55,29 @@ class CarRentalOnline {
 		}
 
 	}
+
 	agregarVehiculo(obj) {
-		const nuevovehiculo = {
-			id: obj.id,
-		};
-		this._vehiculos.push(nuevovehiculo);
+		const matricula = obj.matricula;
+	
+		const vehiculoExiste = this._vehiculos.some((vehiculo) => vehiculo.matricula === matricula);
+	
+		if (vehiculoExiste) {
+		  throw new Error(`Ya existe un vehículo con la matrícula ${matricula}`);
+		}
+	
+		const nuevoVehiculo = new Vehiculo(obj.id);
+		
+		nuevoVehiculo.id = obj.id;
+		nuevoVehiculo.matricula = obj.matricula;
+		nuevoVehiculo.marca = obj.marca;
+		nuevoVehiculo.modelo = obj.modelo;
+		nuevoVehiculo.etiqueta = obj.etiqueta;
+		nuevoVehiculo.costoDia = obj.costoDia;
+		nuevoVehiculo.descripcion = obj.descripcion;
+	
+		this._vehiculos.push(nuevoVehiculo);
 	}
+
 	agregarEmpleado(obj) {
 		const dni = obj.dni;
 		const rol = obj.rol;
@@ -86,6 +103,65 @@ class CarRentalOnline {
 		}
 
 	}
+
+	eliminarVehiculo(vehiculoId) {
+        const vehiculoIndex = this._vehiculos.findIndex(vehiculo => vehiculo._id === vehiculoId);
+        if (vehiculoIndex === -1) {
+            throw new Error(`No se encontró un vehículo con el ID ${vehiculoId}`);
+        }
+    
+        const vehiculo = this._vehiculos[vehiculoIndex];
+            if (vehiculo._eliminado || !vehiculo._disponible) {
+                throw new Error(`El vehículo con ID ${vehiculoId} no está disponible para eliminación`);
+            }
+    
+            vehiculo._eliminado = true;
+        }
+    
+    entregarVehiculo(numero) {
+        const reserva = this._reservas.find(reserva => reserva.numero === numero);
+            if (!reserva) {
+                throw new Error(`No se encontró una reserva con el número ${numero}`);
+            }
+    
+        const vehiculo = this._vehiculos.find(vehiculo => vehiculo._id === reserva.vehiculoId);
+            if (!vehiculo || !vehiculo._disponible) {
+                throw new Error(`El vehículo asociado a la reserva no está disponible para entrega`);
+            }
+    
+        vehiculo._disponible = false;
+        reserva.fechaEntrega = new Date(); 
+    }
+
+    devolverVehiculo(numero) {
+
+        const reserva = this._reservas.find(reserva => reserva.numero === numero);
+        if (!reserva) {
+            throw new Error(`No se encontró una reserva con el número ${numero}`);
+        }
+
+        const vehiculo = this._vehiculos.find(vehiculo => vehiculo._id === reserva.vehiculoId);
+        if (!vehiculo || vehiculo._disponible) {
+            throw new Error(`El vehículo asociado a la reserva no está disponible para devolución`);
+        }
+
+        if (!reserva.fechaEntrega) {
+            throw new Error(`La reserva con el número ${numero} no ha sido entregada`);
+        }
+        vehiculo._disponible = true;
+        reserva.fechaDevolucion = new Date();
+    }
+    
+    vehiculoPorMatricula(matricula) {
+        const vehiculoEncontrado = this._vehiculos.find(vehiculo => vehiculo._matricula === matricula);
+        return vehiculoEncontrado || null;
+    }
+
+    vehiculoById(vehiculoId) {
+        const vehiculoEncontrado = this._vehiculos.find(vehiculo => vehiculo._id === vehiculoId);
+        return vehiculoEncontrado || null;
+    }
+	
 	signin(email, password, rol) {
 		let usuarioEncontrado = null;
 		if (rol === "Empleado") {

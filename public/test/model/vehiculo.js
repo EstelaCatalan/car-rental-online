@@ -1,6 +1,3 @@
-const assert = require("chai").assert;
-const Vehiculo = require("../../src/model/vehiculo");
-
 describe('Vehiculo', function() {
   it('Constructor debe establecer correctamente _id, _eliminado y _disponible', function() {
     const vehiculo = new Vehiculo('123', false, false);
