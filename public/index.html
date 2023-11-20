@@ -1,41 +1,70 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+
 <html>
 
 <head>
     <title>Car Rental Online Web Site</title>
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+    <link rel="stylesheet" href="./css/styleinvitado.css" type="text/css">
+    <script src="./model/usuario.js"></script>
+    <script src="./model/cliente.js"></script>
+    <script src="./model/empleado.js"></script>
+    <script src="./model/car-rental-online.js"></script>
+    <script src="./components/commons/view.js"></script>
+    <script src="./components/commons/page-view.js"></script>
+    <script src="./components/commons/router.js"></script>
+    <script src="./components/commons/controller.js"></script>
+    <script src="./components/commons/page-controller.js"></script>
+    <script src="./components/invitado-home-page/invitado-home-page-view.js"></script>
+    <script src="./components/invitado-home-page/invitado-home-page-controller.js"></script>
+    <script>
+        async function init() {
+            let router, mensajes;
+            let model = new CarRentalOnline();
+            router = new Router();
+            //mensajes= new Mensajes();
+            router.addRouter(/\/car\-rental\-online\/invitado\-home\-page$/, new InvitadoHomePageController(model));
+            //router.handleLocation();
+
+        }
+    </script>
 </head>
-<body>
-    <main>
-        <header>
-            <h1>Car Rental Online</h1>
 
-            <nav>
+<body onload="init()">
 
-                <a href="invitado/index.html">Invitado</a></th>
-                <a href="cliente/index.html">Cliente</a>
-                <a href="empleado/index.html">Empleado</a>
+    <body>
+        <main>
+            <header>
+                <h1>Car Rental Online</h1>
+
+                <nav >
+
+                    <p>sin navegación</p>
 
 
-            </nav>
+                </nav>
 
-        </header>
-        <section>
-            <article>
-                <header>
-                    <h2>Bienvenido</h2>
-                </header>
-                <p>Sistema de gestión de reserva de vehiculos para la práctica de la asignatura Tecnologias y
-                    Sistemas
-                    web</p>
-                <p>Escuela superior de Ingeniería informática de albacete</p>
-                <p>Universidad de Castilla-La Mancha</p>
-            </article>
-        </section>
-    </main>
+            </header>
+            <ul>
+                <li class="info" id="estado">sin estado</li>
+            </ul>
+            <section>
+                <article>
+                    <header>
+                        <h2>Contenido</h2>
+                    </header>
+                    <p id="contents">sin inicializar</p>
+                </article>
+            </section>
+        </main>
+
+    </body>
+    <footer>
+        
+    </footer>
 </body>
-<footer>
-    <p> Tecnologias y Sistemas Web</p>
-</footer>
+
+
+
+
 </html>
