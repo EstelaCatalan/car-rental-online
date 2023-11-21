@@ -1,0 +1,54 @@
+<nav>
+    <a href="invitado-signup-page" onclick="router.route(event);">Registro</a>
+    <a href="invitado-disponibilidad-page" onclick="router.route(event);">Disponibilidad</a>
+</nav>
+</header>
+<ul>
+    <li>
+        <b class="ok">Ok</b>
+    </li>
+    <li>
+        <b class="error">Error</b>
+    </li>
+    <li>
+        <b class="info">Info</b>
+    </li>
+</ul>
+<section>
+    <header>
+        <h2 style="text-align: left;">Ingresar</h2>
+    </header>
+    <div class="Ingresar">
+        <form id="formularioIngresar" action="/public/invitado/signin.html" method="get">
+
+            <div class="fila">
+
+                <div class="columna">
+                    <label for="email">Email*</label>
+                    <input type="text" name="email" placeholder="Ingrese direccion de correo electronico" maxlength="20"
+                        required>
+                </div>
+                <div class="columna">
+                    <label for="Contraseña">Contraseña*</label>
+                    <input type="password" id="Contraseña" name="usuarioPassword" required>
+                </div>
+                <div class="columna">
+                    <label for="rol">Selecciona un rol:</label>
+                    <select id="rol" name="rol">
+                        <option value="EMPLEADO">Empleado</option>
+                        <option value="CLIENTE">Cliente</option>
+                    </select>
+                </div>
+            </div>
+
+            <p style="font-weight: bold; font-size: smaller; margin-bottom: 10px;">*Campos obligatorios</p>
+            <div class="butcenter">
+                <button>Ingresar</button>
+                <!--Hacer el signin aqui-->
+            </div>
+        </form>
+        <footer>
+            <p> Tecnologías y Sistemas Web</p>
+        </footer>
+    </div>
+</section>
