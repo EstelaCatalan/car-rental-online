@@ -166,11 +166,15 @@ class CarRentalOnline {
     }
 	
 	signin(email, password, rol) {
+		
 		let usuarioEncontrado = null;
 		if (rol === "Empleado") {
 			usuarioEncontrado = this._empleados.find(empleado => empleado.email === email && empleado.password === password);
 		} else if (rol === "Cliente") {
-			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email && cliente.password === password);
+			
+			
+			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email );//&& cliente.password === password);
+			
 		} else {
 			throw new Error("Rol no válido");
 		}

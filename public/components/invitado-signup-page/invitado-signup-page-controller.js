@@ -18,39 +18,45 @@ class InvitadoSignupPageController extends PageController {
         this.view.form.reportValidity();
         let valid = this.view.form.checkValidity();
 
-        try {
-            if (valid) {
-                if (this.clientePassword == this.clientePassword2) {
-                    const cliente = {
-                        dni: this.clienteDni,
-                        nombres: this.clienteNombres,
-                        apellidos: this.clienteApellidos,
-                        direccion: this.clienteDireccion,
-                        email: this.clienteEmail,
-                        password: this.clientePassword,
-                        telefono: this.clienteTelefono,
-                        rol: this.clienteRol,
+        if (valid) {
+            if (this.clientePassword == this.clientePassword2) {
+                const cliente = {
+                    dni: this.clienteDni,
+                    nombres: this.clienteNombres,
+                    apellidos: this.clienteApellidos,
+                    direccion: this.clienteDireccion,
+                    email: this.clienteEmail,
+                    password: this.clientePassword,
+                    telefono: this.clienteTelefono,
+                    rol: this.clienteRol
 
-                    };
-                    
+
+                };
+                if (this.clienteRol == "Cliente") {
+
 
                     this.model.agregarCliente(cliente);
-                    
-
-                    event.target.href = "/car-rental-online/invitado-home-page";
+                   
                 }
-
-
+                if (this.clienteRol == "Empleado") {
+                    this.model.agregarEmpleado(cliente);
+                    
+                }
             }
-        } catch (err) {
-            console.error(err.message)
-            mensajes.agregarError(err.message);
+
+            event.target.href = "/car-rental-online/invitado-home-page";
+            router.route(event);
+
         }
+
+
     }
 
 
+
+
     async refresh(url) {
-    await super.refresh(url);
-}
+        await super.refresh(url);
+    }
 
 }

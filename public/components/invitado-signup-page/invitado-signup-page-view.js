@@ -28,7 +28,7 @@ class InvitadoSignupPageView extends PageView {
     get clientePassword2Input() { return document.getElementById('clientePassword2'); }
     get clientePassword2InputValue() { return this.clientePassword2Input.value; }
 
-    get clienteRolInput() { return document.getElementById('clienteRol'); }
+    get clienteRolInput() { return document.getElementById('rol'); }
     get clienteRolInputValue() { return this.clienteRolInput.value; }
 
 
