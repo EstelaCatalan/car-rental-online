@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Rental Online Web Site</title>
+    <link rel="stylesheet" href="../style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Car Rental Online</h1>
+            <nav>
+                <a href="listar-vehiculos.html">Vehículos</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="index.html">Salir</a>
+            </nav>
+        </header>
+        <ul>
+            <li>
+                <b class="ok">Ok</b>
+            </li>
+            <li>
+                <b class="error">Error</b>
+            </li>
+            <li>
+                <b class="info">Info</b>
+            </li>
+        </ul>
+        <section>
+            <header>
+                <h2 style="text-align: left;">Vehículo</h2>
+            </header>
+            <div class="Agregar">
+                <form id="formularioAgregar" action="/public/empleado/listar-vehiculo.html" method="get">
+                    <div class="fila">
+                        <div class="columna">
+                            <div>Matrícula*</div>
+                            <input type="text" name="vehiculoMatricula" placeholder="Ingrese matrícula" pattern="[A-Za-z]{3}\d{4}" required>
+                            <div>Formato: AAA0000 </div>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label for="marca">Marca*</label>
+                            <input type="text" name="vehiculoMarca" placeholder="Ingrese marca" maxlength="20" required>
+                        </div>
+                        <div class="columna">
+                            <label for="modelo">Modelo*</label>
+                            <input type="text" name="vehiculoModelo" placeholder="Ingrese modelo" maxlength="20" required>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label for="tipo">Tipo*</label>
+                            <select id="tipo" name="vehiculoTipo">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="columna">
+                            <label for="etiqueta">Etiqueta*</label>
+                            <select id="etiqueta" name="vehiculoEtiqueta">
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="ECO">ECO</option>
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label for="descripcion">Descripción*</label>
+                            <textarea id="descripcion" name="vehiculoDescripcion" rows="3" placeholder="Ingrese descripción" required></textarea>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label for="costoPorDia">Costo por día €*</label>
+                            <input type="number" id="costoPorDia" name="vehiculoCostoDia" min="0" max="10000" step="0.01" required placeholder="Ingrese costo por día" required>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <div>
+                                <label>Disponible: </label> SI
+                            </div>
+                        </div>
+                        <div class="columna">
+                            <div>
+                                <label>Eliminado: </label> NO
+                            </div>
+                        </div>
+                        <div class="columna">
+                            <div>
+                                <label>Revisión: </label> SI
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-weight: bold; font-size: smaller; margin-bottom: 10px;">*Campos obligatorios</p>
+                    <div class="butcenter">
+                        <button>Agregar</button>
+                    </div>
+                </form>
+                <footer class="minfooter">
+                    <p> Tecnologías y Sistemas Web</p>
+                </footer>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
