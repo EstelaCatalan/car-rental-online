@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\public",
+    "\\public\\cliente",
     "\\public\\components",
     "\\public\\components\\commons",
     "\\public\\components\\empleado-vehiculos-page",
-    "\\public\\components\\invitado-home-page",
-    "\\public\\empleado",
-    "\\public\\model",
-    "\\src"
+    "\\public\\components\\model",
+    "\\public\\css",
+    "\\public\\invitado",
+    "\\public\\test"
   ],
-  "SelectedNode": "\\public\\empleado\\listar-vehiculos.html",
+  "SelectedNode": "\\public\\components\\commons\\router.js",
   "PreviewInSolutionExplorer": false
 }
