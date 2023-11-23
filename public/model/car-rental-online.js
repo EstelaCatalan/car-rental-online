@@ -53,6 +53,7 @@ class CarRentalOnline {
 		} else {
 			throw new Error(`El objeto no tiene rol de Cliente`);
 		}
+		
 
 	}
 

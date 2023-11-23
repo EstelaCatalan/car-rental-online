@@ -2,11 +2,56 @@ class Router {
     routers;
     controllers;
 
-    constructor() {
-        this.routers = [];
-        this.controllers = [];
-        this.init();
+  constructor() {
+    this.routers = [];
+    this.controllers = [];
+    this.init();
+  }
+  init() {
+    window.addEventListener('popstate', () => {
+      this.handleLocation();
+    });
+  }
+  addRouter(router, controller) {
+    this.routers.push(router);
+    this.controllers.push(controller);
+  }
+  removeRouter(router) {
+    let index = this.routers.indexOf(router);
+    this.routers.splice(index, 1);
+    this.controllers.splice(index, 1);
+  }
+
+get controller() {
+ 
+  return null; }
+
+  async route(event) {
+    event.preventDefault();
+    window.history.pushState({}, '', event.target.href);
+    this.handleLocation();
+  }
+
+
+  get localLocation() {
+    let url = window.location.pathname;
+    return url.concat(window.location.search.length > 1 ? window.location.search : '');
+  }
+
+  get controller() {
+    
+    let url = this.localLocation;
+    let index = this.routers.findIndex((router) => router.test(url));
+    
+    if (index < 0) {
+      console.error(`${url} not found`);
+      url = '/not-found?url=' + encodeURIComponent(url);
+      window.history.replaceState({}, '', url);
+      index = 0;
     }
+    console.log(this.controllers[index]);
+    return this.controllers[index];
+  }
 
     init() {
         window.addEventListener('popstate', () => {
@@ -55,7 +100,7 @@ class Router {
             //Indice del controlador de la nueva ruta
             let index = this.routers.findIndex((router) => router.test(this.localLocation));
 
-            // Si el índice es menor que 0, significa que la ruta no está en la lista actual de rutas
+            // Si el ï¿½ndice es menor que 0, significa que la ruta no estï¿½ en la lista actual de rutas
             if (index < 0) {
                 console.error(`${this.localLocation} not found`);
             }
