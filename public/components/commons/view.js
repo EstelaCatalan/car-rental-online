@@ -6,6 +6,7 @@ class View {
 		this.viewId = viewId;
 	}
 	async load() {
+		
 		if (!this.viewId) return '';
 		let response = await fetch(`./components/${this.viewId}/${this.viewId}.html`);
 		if (response.ok) return await response.text();

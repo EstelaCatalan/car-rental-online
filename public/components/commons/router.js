@@ -22,7 +22,9 @@ class Router {
     this.controllers.splice(index, 1);
   }
 
-  get controller() { return null; }
+get controller() {
+ 
+  return null; }
 
   async route(event) {
     event.preventDefault();
@@ -37,14 +39,17 @@ class Router {
   }
 
   get controller() {
+    
     let url = this.localLocation;
     let index = this.routers.findIndex((router) => router.test(url));
+    
     if (index < 0) {
       console.error(`${url} not found`);
       url = '/not-found?url=' + encodeURIComponent(url);
       window.history.replaceState({}, '', url);
       index = 0;
     }
+    console.log(this.controllers[index]);
     return this.controllers[index];
   }
 

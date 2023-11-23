@@ -14,7 +14,7 @@
             <h2>Registro</h2>
         </header>
         <div class="Registro">
-            <form class="form" method="get" action="http://localhost:3000/car-rental-online/invitado/signin.html">
+            <form class="form" method="GET" id="signupform">
                 <div class="fila">
                     <div class="columna">
                         <label for="clienteDni">DNI*:</label>
@@ -65,15 +65,15 @@
                     <div class="columna">
                         <label for="rol">Selecciona un rol:</label>
                         <select id="rol" name="rol">
-                            <option value="EMPLEADO">Empleado</option>
-                            <option value="CLIENTE">Cliente</option>
+                            <option value="Empleado">Empleado</option>
+                            <option value="Cliente">Cliente</option>
                         </select>
                     </div>
                 </div>
                 <div class="botondiv">
-                    <input class="boton" type="submit" value="Registrarse">
+                    <input class="boton" type="submit" value="Registrarse" onclick="router.controller.registrar(event);">
                 </div>
-                <!--Hacer el signup aqui y verificar datos-->
+                
             </form>
         </div>
     </article>

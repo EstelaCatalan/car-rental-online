@@ -15,7 +15,7 @@ app.use('/car-rental-online/api', (req, res) => {
     res.status(501).send('501 Not Implemented');
 });
 app.get('/car-rental-online/componentes', (req, res) => {
-    res.sendFile(__dirname + '/public/components/index.html');
+    res.sendFile(__dirname + '/public/components');
 });
 
 app.get('/car-rental-online/model', (req, res) => {
