@@ -1,7 +1,7 @@
-class ClientePerfilPageController extends PageController {
+class EmpleadoPerfilPageController extends PageController {
     constructor(model) {
         super(model);
-        this.view = new ClientePerfilPageView();
+        this.view = new EmpleadoPerfilPageView();
     }
 
     get clienteNombres() { return this.view.clienteNombresInputValue; }

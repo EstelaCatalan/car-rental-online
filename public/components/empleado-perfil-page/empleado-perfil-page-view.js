@@ -1,6 +1,6 @@
-class ClientePerfilPageView extends PageView {
+class EmpleadoPerfilPageView extends PageView {
     
-    constructor() { super('cliente-perfil-page'); }
+    constructor() { super('empleado-perfil-page'); }
     
    set usuario(dni){
     return document.getElementById('usuarioDNI').innerHTML=nombre;

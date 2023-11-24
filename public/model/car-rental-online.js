@@ -362,5 +362,12 @@ class CarRentalOnline {
 		const reservasDelCliente = this._reservas.filter(reserva => reserva.clienteId === clienteId);
 		return reservasDelCliente;
 	}
+	setPerfil(perfil){
+		usuarioEncontrado = this._clientes.find(cliente => perfil.email === email && cliente.password === perfil.password);
+		if(usuarioEncontrado){
+			return true;
+		}
+		return false;
+	}
 
 }

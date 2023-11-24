@@ -696,5 +696,28 @@ describe("car-rental-online", function() {
         const reservasDelCliente = carrentalonline.reservasByClienteId(cliente1.id);
         expect(reservasDelCliente.length).to.equal(2);
     });
+   it("Set Perfil",function(){
+    carrentalonline.signin(usuario1);
+    const perfil = {
+        nombres: 'Nombre',
+        apellidos: 'Apellido',
+        email: 'correo@ejemplo.com',
+        telefono: '123456789',
+        direccion: 'Dirección',
+        contrasena: 'password',
+        contrasenaRepetida: 'password',
+    };
+    const perfil2 = {
+        nombres: 'Nombre',
+        apellidos: 'Apellido',
+        email: 'correo@ejemplo.com',
+        telefono: '123456789',
+        direccion: 'Dirección',
+        contrasena: '1234',
+        contrasenaRepetida: 'password',
+    };
+    assert.equal(carrentalonline.setPerfil(perfil),true)
+    assert.throws(() => carrentalonline.setPerfil(perfil2),'Las contraseñas no coinciden');
+   })
 
 })

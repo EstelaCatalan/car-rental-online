@@ -27,6 +27,8 @@
     <script src="./components/invitado-signin-page/invitado-signin-page-controller.js"></script>
     <script src="./components/cliente-perfil-page/cliente-perfil-page-view.js"></script>
     <script src="./components/cliente-perfil-page/cliente-perfil-page-controller.js"></script>
+    <script src="./components/empleado-perfil-page/empleado-perfil-page-view.js"></script>
+    <script src="./components/empleado-perfil-page/empleado-perfil-page-controller.js"></script>
     <script>
         let router, mensajes;
         async function init() {
@@ -39,6 +41,7 @@
             router.addRouter(/\/car\-rental\-online\/invitado\-signup\-page$/, new InvitadoSignupPageController(model));
             router.addRouter(/\/car\-rental\-online\/invitado\-signin\-page$/, new InvitadoSigninPageController(model));
             router.addRouter(/\/car\-rental\-online\/cliente\-perfil\-page$/, new ClientePerfilPageController(model));
+            router.addRouter(/\/car\-rental\-online\/empleado\-perfil\-page$/, new EmpleadoPerfilPageController(model));
             router.handleLocation();
 
         }
