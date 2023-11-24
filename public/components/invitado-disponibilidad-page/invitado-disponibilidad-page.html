@@ -1,0 +1,31 @@
+<nav>
+    <a href="invitado-signin-page" onclick="router.route(event);">Ingreso</a>
+    <a href="invitado-disponibilidad-page" onclick="router.route(event);">Disponibilidad</a>
+</nav>
+</header>
+<ul>
+    <li><b class="ok">Ok</b></li>
+    <li><b class="error">Error</b></li>
+    <li><b class="info">Info</b></li>
+</ul>
+<section>
+    <article>
+        <header>
+            <h2>Disponibilidad</h2>
+        </header>
+        <div class="Disponibilidad">
+
+            <form id="filtroDisponibilidadForm">
+                <label for="marca">Marca:</label>
+                <input type="text" id="marca" name="marca" placeholder="Ingrese marca">
+
+                <label for="modelo">Modelo:</label>
+                <input type="text" id="modelo" name="modelo" placeholder="Ingrese modelo">
+
+                <input type="submit" value="Buscar" onclick="router.controller.obtenerDisponibilidad(event);">
+            </form>
+
+            <ul id="listaDisponibilidad"></ul>
+        </div>
+    </article>
+</section>

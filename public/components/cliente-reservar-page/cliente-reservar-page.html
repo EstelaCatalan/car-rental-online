@@ -1,0 +1,132 @@
+
+        <nav>
+            <a href="cliente-reservas-page" onclick="router.route(event);">Reservas</a>
+            <a href="clientes-disponibilidad-page" onclick="router.route(event);">Disponibilidad</a>
+            <a href=" clientes-perfil-page"onclick="router.route(event);">Perfil</a>
+            <a onclick="router.controller.signout(event);">Salir</a>
+        </nav>
+
+    <ul>
+        <li>
+            <b class="ok">Ok</b>
+        </li>
+        <li>
+            <b class="error">Error</b>
+        </li>
+        <li>
+            <b class="info">Info</b>
+        </li>
+    </ul>
+
+    <section>
+        <header>
+            <h2>Reserva</h2>
+        </header>
+        <div class="Reserva">
+            <form id="formularioReserva" action="/public/cliente/listar-reservar.html" method="get">
+                <div class="fila">
+                    <div class="columna">
+                        <div style="font-weight: bold;">Código</div> AAAAAAAAAAAAAAAAAAAA <input type="hidden" name="reservaCódigo" value="AAAAAAAAAAAAAAAAAAAA">
+                    </div>
+                    <div class="columna">
+                        <div style="font-weight: bold;">Fecha</div>
+                        <time datetime="2023-10-08T15:30:00">20/01/01 10:00</time>
+                        <input type="hidden" name="reservaFecha" value="2023-10-08T15:30:00">
+                    </div>
+                </div>
+                <div class="fila">
+                    <div class="columna">
+                        <label>Inicio*:</label>
+                        <input type="datetime-local" name="reservaInicio" required>
+                    </div>
+                    <div class="columna">
+                        <label>Fin*:</label>
+                        <input type="datetime-local" name="reservaFin" required>
+                    </div>
+                    <div class="columna">
+                        <label>Entrega*:</label>
+                        <input type="datetime-local" name="reservaEntrega" required>
+                    </div>
+                    <div class="columna">
+                        <label>Devolución*:</label>
+                        <input type="datetime-local" name="reservaDevolucion" required>
+                    </div>
+                </div>
+                <p style="font-weight: bold; font-size: smaller; margin-bottom: 10px;">*Campos obligatorios</p>
+                <br>
+                <div class="cliente-info">
+                    <h2 style="text-align: left;">Cliente</h2>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold; ">DNI:</label> 00000000X
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Nombres:</label> Nombres
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Apellidos:</label> Apellidos <br>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold;">Dirección:</label> Praesent et porttitor ipsum, sit amet ultrices neque. Donec velit diam, ultricies id ultricies et, tempus vitae urna. Curabitur et condimentum ante. Nullam mi quam, accumsan vitae scelerisque ut, viverra eget nibh. Donec suscipit diam enim, et blandit neque luctus rutrum. In iaculis diam id nunc sagittis, vel hendrerit metus sollicitudin. Duis pharetra tellus et venenatis feugiat. Donec eget ipsum leo. <br>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold;">Teléfono:</label> +000 0000000
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Email:</label> cliente@email.com
+                        </div>
+                    </div>
+                </div>
+                <div class="vehiculo-info">
+                    <h2 style="text-align: left;">Vehículo</h2>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold; ">Matrícula:</label> AAA000
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Marca:</label> Marca
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Modelo:</label> Modelo <br>
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold; ">Tipo:</label> TIPO
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Etiqueta:</label> ETIQUETA
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold;">Costo per día:</label> € 0.00
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold;">Descripción:</label>Suspendisse vel porttitor mi. Aenean et accumsan tortor, non congue orci. Donec placerat nunc tincidunt fringilla dictum. Donec turpis nibh, elementum quis scelerisque ac, consequat in massa. Mauris bibendum ipsum ac ex malesuada, et pellentesque urna mattis. Proin sit amet mauris luctus, condimentum diam nec, lacinia orci. Vestibulum lacinia eget purus ut ultricies. Pellentesque dapibus sit amet augue id aliquam. Maecenas eget libero nisl. Curabitur ligula eros, sollicitudin eget arcu sagittis, venenatis dictum odio.
+                        </div>
+                    </div>
+                    <div class="fila">
+                        <div class="columna">
+                            <label style="font-weight: bold; ">Disponible:</label> NO
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold; ">Eliminado:</label> NO
+                        </div>
+                        <div class="columna">
+                            <label style="font-weight: bold; ">Revisión:</label> NO
+                        </div>
+                    </div>
+                    <h2 style="text-align: right; color: black;">Costo: € 0.00</h2>
+                    <div class="butcenter">
+                        <button>Reservar</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </section>
