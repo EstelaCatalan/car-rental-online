@@ -165,6 +165,24 @@ describe("Reserva", function() {
 	
 		assert.equal(reserva.costo, undefined);
 	});
-
+	it("setter inicio con costoDia definido", function () {
+		reserva.costoDia = 40;
+		const nuevoInicio = new Date('2023-11-02T10:30:00.000Z');
+		reserva.inicio = nuevoInicio;
+		const tiempoAlquiler = fin.getTime() - nuevoInicio.getTime();
+		const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+		const costoEsperado = diasAlquiler * reserva.costoDia;
+		assert.equal(reserva.costo, costoEsperado);
+	  });
+	
+	  it("setter fin con costoDia definido", function () {
+		reserva.costoDia = 45;
+		const nuevoFin = new Date('2023-11-10T14:30:00.000Z');
+		reserva.fin = nuevoFin;
+		const tiempoAlquiler = nuevoFin.getTime() - inicio.getTime();
+		const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+		const costoEsperado = diasAlquiler * reserva.costoDia;
+		assert.equal(reserva.costo, costoEsperado);
+	  });
    
 });
