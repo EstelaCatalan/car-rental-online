@@ -3,23 +3,14 @@ class InvitadoDisponibilidadPageView extends PageView {
         super('invitado-disponibilidad-page');
     }
 
-    mostrarDisponibilidad(disponibilidad) {
-        const listaDisponibilidad = document.getElementById('listaDisponibilidad');
+    mostrarVehiculosDisponibles(vehiculos) {
+        const contenedor = document.querySelector('.vehiculos-disponibles');
+        contenedor.innerHTML = '';
 
-        listaDisponibilidad.innerHTML = '';
-
-        if (disponibilidad.length === 0) {
-
-            const mensajeSinDisponibilidad = document.createElement('p');
-            mensajeSinDisponibilidad.textContent = 'No se encontraron vehículos disponibles en este momento.';
-            listaDisponibilidad.appendChild(mensajeSinDisponibilidad);
-        } else {
-
-            disponibilidad.forEach(vehiculo => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${vehiculo.marca} ${vehiculo.modelo}`;
-                listaDisponibilidad.appendChild(listItem);
-            });
-        }
+        vehiculos.forEach((vehiculo) => {
+            const elementoVehiculo = document.createElement('div');
+            elementoVehiculo.textContent = `ID: ${vehiculo.id}, Modelo: ${vehiculo.modelo}, Marca: ${vehiculo.marca}`;
+            contenedor.appendChild(elementoVehiculo);
+        });
     }
 }

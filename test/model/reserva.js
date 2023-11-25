@@ -4,28 +4,30 @@ const Reserva = require("../../src/model/reserva");
 describe("Reserva", function() {
 	let reserva;
 	const id = '1';
-	const inicio = new Date('2023-11-01T10:00:00.000Z');
-	const fin = new Date('2023-11-05T14:30:00.000Z');
-	const costo = 500;
+	const inicio = new Date('2023-11-23'); 
+	const fin = new Date('2023-11-25'); 
+	const costo = 500.00;
 	const numero = 'R12345';
-	const entrega = new Date('2023-11-01T11:45:00.000Z');
-	const devolucion = new Date('2023-11-05T15:15:00.000Z');
-	const fecha = new Date('2023-10-25T08:20:00.000Z');
+	const entrega = new Date('2023-11-01');
+	const devolucion = new Date('2023-11-05');
+	const fecha = new Date('2023-10-25');
 	const clienteId = 'C001';
 	const vehiculoId = 'V001';
+	const costoDia = 500.00;
 
 	beforeEach(function() {
 		reserva = new Reserva(id);
 		reserva.inicio = inicio;
 		reserva.fin = fin;
-		reserva.costo = costo;
 		reserva.numero = numero;
 		reserva.entrega = entrega;
 		reserva.devolucion = devolucion;
 		reserva.fecha = fecha;
 		reserva.clienteId = clienteId;
 		reserva.vehiculoId = vehiculoId;
-	});
+		reserva.costoDia = costoDia;
+		reserva.costo = costo;
+		});
 
 	it("constructor reserva", function() {
 		assert.equal(reserva._id, id);
@@ -120,4 +122,49 @@ describe("Reserva", function() {
 		reserva.vehiculoId = nuevoVehiculoId;
 		assert.equal(reserva.vehiculoId, nuevoVehiculoId);
 	});
+
+	it("getter costoDia", function() {
+		assert.equal(reserva.costoDia, costoDia);
+	});
+
+	it("setter costoDia", function() {
+		const costoDia = '1.00';
+		reserva.costoDia = costoDia;
+		assert.equal(reserva.costoDia, costoDia);
+	});
+
+	it("recalcularCosto", function() {
+	
+		const inicio = new Date('2023-11-23');
+		const fin = new Date('2023-11-25');
+		const costoDia = 500.00;
+		
+		reserva.inicio = inicio;
+		reserva.fin = fin;
+		reserva.costoDia = costoDia;
+	
+		reserva.recalcularCosto();
+	
+		const restatiemp = fin.getTime() - inicio.getTime();
+		const diasAlquiler = Math.ceil(restatiemp / (1000 * 60 * 60 * 24));
+		const costoassert = diasAlquiler * costoDia;
+	
+		assert.equal(reserva.costo, costoassert);
+	});
+
+	it("recalcularCosto undefined", function() {
+	
+		const fin = new Date('2023-11-25');
+		const costoDia = 500.00;
+		
+		reserva.inicio = "";
+		reserva.fin = fin;
+		reserva.costoDia = costoDia;
+	
+		reserva.recalcularCosto();
+	
+		assert.equal(reserva.costo, undefined);
+	});
+
+   
 });

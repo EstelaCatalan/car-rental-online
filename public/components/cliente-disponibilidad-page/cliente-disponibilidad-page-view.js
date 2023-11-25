@@ -9,9 +9,9 @@ class ClienteDisponibilidadPageView extends PageView {
 
         if (disponibilidad.length === 0) {
 
-            const mensajeSinDisponibilidad = document.createElement('p');
-            mensajeSinDisponibilidad.textContent = 'No se encontraron vehículos disponibles en este momento.';
-            listaDisponibilidad.appendChild(mensajeSinDisponibilidad);
+            const nodisp = document.createElement('p');
+            nodisp.textContent = 'No se encontraron vehículos disponibles';
+            listaDisponibilidad.appendChild(nodisp);
         } else {
 
             disponibilidad.forEach(vehiculo => {

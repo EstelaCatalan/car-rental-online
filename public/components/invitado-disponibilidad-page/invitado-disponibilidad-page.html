@@ -1,5 +1,5 @@
 <nav>
-    <a href="invitado-signin-page" onclick="router.route(event);">Ingreso</a>
+    <a href="invitado-signup-page" onclick="router.route(event);">Registro</a>
     <a href="invitado-disponibilidad-page" onclick="router.route(event);">Disponibilidad</a>
 </nav>
 </header>
@@ -9,23 +9,23 @@
     <li><b class="info">Info</b></li>
 </ul>
 <section>
-    <article>
-        <header>
-            <h2>Disponibilidad</h2>
-        </header>
-        <div class="Disponibilidad">
+    <header>
+        <h2>Vehículos Disponibles</h2>
+    </header>
+    <form id="filtroDisponibilidadForm" style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <label for="modelo" style="flex: 1; margin-right: 5px;">Modelo:</label>
+        <input type="text" id="modelo" name="modelo" placeholder="Modelo del vehículo" style="flex: 2; width: 150px;">
 
-            <form id="filtroDisponibilidadForm">
-                <label for="marca">Marca:</label>
-                <input type="text" id="marca" name="marca" placeholder="Ingrese marca">
+        <label for="marca" style="flex: 1; margin-right: 10px; margin-left: 10px;">Marca:</label>
+        <input type="text" id="marca" name="marca" placeholder="Marca del vehículo" style="flex: 2; width: 150px;">
 
-                <label for="modelo">Modelo:</label>
-                <input type="text" id="modelo" name="modelo" placeholder="Ingrese modelo">
-
-                <input type="submit" value="Buscar" onclick="router.controller.obtenerDisponibilidad(event);">
-            </form>
-
-            <ul id="listaDisponibilidad"></ul>
-        </div>
-    </article>
+        <input type="submit" value="Buscar" style="margin-top: 10px; padding: 2px 6px; font-size: 10px; width: 90px;" onclick="router.controller.obtenerDispo(event);">
+    </form>
+    
+    <div class="vehiculos-disponibles">
+      
+    </div>
+    <footer>
+        <p>Tecnologías y Sistemas Web</p>
+    </footer>
 </section>

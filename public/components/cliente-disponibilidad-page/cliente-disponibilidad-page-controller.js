@@ -1,7 +1,7 @@
 class ClienteDisponibilidadPageController extends PageController {
     constructor(model) {
         super(model);
-        this.view = new ClienteReservasPageView();
+        this.view = new ClienteDisponibilidadPageView();
     }
 
     obtenerDisponibilidad(event) {

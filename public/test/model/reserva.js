@@ -117,4 +117,91 @@ describe("Reserva", function () {
     reserva.vehiculoId = nuevoVehiculoId;
     assert.equal(reserva.vehiculoId, nuevoVehiculoId);
   });
+
+  it("método recalcularCosto", function () {
+    // Establecemos costoDia para la prueba
+    reserva.costoDia = 50;
+    // Cambiamos fin para que se recalcule el costo
+    const nuevoFin = new Date('2023-11-10T14:30:00.000Z');
+    reserva.fin = nuevoFin;
+    // Calculamos el costo esperado
+    const tiempoAlquiler = nuevoFin.getTime() - inicio.getTime();
+    const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+    const costoEsperado = diasAlquiler * reserva.costoDia;
+    assert.equal(reserva.costo, costoEsperado);
+  });
+
+  it("setter costoDia", function () {
+    // Establecemos costoDia
+    const nuevoCostoDia = 60;
+    reserva.costoDia = nuevoCostoDia;
+    // Cambiamos fin para que se recalcule el costo
+    const nuevoFin = new Date('2023-11-10T14:30:00.000Z');
+    reserva.fin = nuevoFin;
+    // Calculamos el costo esperado
+    const tiempoAlquiler = nuevoFin.getTime() - inicio.getTime();
+    const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+    const costoEsperado = diasAlquiler * nuevoCostoDia;
+    assert.equal(reserva.costo, costoEsperado);
+  });
+
+  it("setter inicio con costoDia definido", function () {
+    // Establecemos costoDia
+    reserva.costoDia = 40;
+    // Cambiamos inicio para que se recalcule el costo
+    const nuevoInicio = new Date('2023-11-02T10:30:00.000Z');
+    reserva.inicio = nuevoInicio;
+    // Calculamos el costo esperado
+    const tiempoAlquiler = fin.getTime() - nuevoInicio.getTime();
+    const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+    const costoEsperado = diasAlquiler * reserva.costoDia;
+    assert.equal(reserva.costo, costoEsperado);
+  });
+
+  it("setter fin con costoDia definido", function () {
+    // Establecemos costoDia
+    reserva.costoDia = 45;
+    // Cambiamos fin para que se recalcule el costo
+    const nuevoFin = new Date('2023-11-10T14:30:00.000Z');
+    reserva.fin = nuevoFin;
+    // Calculamos el costo esperado
+    const tiempoAlquiler = nuevoFin.getTime() - inicio.getTime();
+    const diasAlquiler = Math.ceil(tiempoAlquiler / (1000 * 60 * 60 * 24));
+    const costoEsperado = diasAlquiler * reserva.costoDia;
+    assert.equal(reserva.costo, costoEsperado);
+  });
+
+  it("recalcularCosto", function() {
+	
+		const inicio = new Date('2023-11-23');
+		const fin = new Date('2023-11-25');
+		const costoDia = 500.00;
+		
+		reserva.inicio = inicio;
+		reserva.fin = fin;
+		reserva.costoDia = costoDia;
+	
+		reserva.recalcularCosto();
+	
+		const restatiemp = fin.getTime() - inicio.getTime();
+		const diasAlquiler = Math.ceil(restatiemp / (1000 * 60 * 60 * 24));
+		const costoassert = diasAlquiler * costoDia;
+	
+		assert.equal(reserva.costo, costoassert);
+	});
+
+	it("recalcularCosto undefined", function() {
+	
+		const fin = new Date('2023-11-25');
+		const costoDia = 500.00;
+		
+		reserva.inicio = "";
+		reserva.fin = fin;
+		reserva.costoDia = costoDia;
+	
+		reserva.recalcularCosto();
+	
+		assert.equal(reserva.costo, undefined);
+	});
+  
 });
