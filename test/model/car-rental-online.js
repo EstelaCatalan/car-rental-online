@@ -95,7 +95,7 @@ describe("car-rental-online", function() {
         devolucion: 'sitio b2',
         fecha: new Date('2023-11-15T10:00:00.000Z'),
         clienteId: 2,
-        vehiculoId: 102,
+        vehiculoId: 2,
     };
 
     const reserva3 = {
@@ -107,8 +107,8 @@ describe("car-rental-online", function() {
         entrega: 'sitio a3',
         devolucion: 'sitio b3',
         fecha: new Date('2023-12-15T10:00:00.000Z'),
-        clienteId: 3,
-        vehiculoId: 103,
+        clienteId: 2,
+        vehiculoId: 3,
     };
 
     const vehiculo1 = {
@@ -370,22 +370,20 @@ describe("car-rental-online", function() {
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
+        carrentalonline.reservar(reserva1);
 
-        assert.throws(() => carrentalonline.reservar(101, new Date('2023-12-03T10:00:00.000Z'), new Date('2023-12-06T10:00:00.000Z')));
+        assert.throws(() => carrentalonline.reservar(reserva1));
   
     });
 
     it("reservar con vehículo inexistente", function() {
 
-        const vehiculo1 = {
-            id: 101,
-        };
+        
         carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        expect(() => carrentalonline.reservar(129, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z')))
+        expect(() => carrentalonline.reservar(reserva1))
             .to.throw("El vehículo con el ID indicado no existe.");
     });
 
@@ -398,7 +396,7 @@ describe("car-rental-online", function() {
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        const reserva = carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
+        const reserva = carrentalonline.reservar(reserva1);
 
         assert.property(reserva, "numero");
         assert.property(reserva, "fecha");
@@ -411,45 +409,47 @@ describe("car-rental-online", function() {
     });
     it("cliente con reservas existentes", function() {
 
-        carrentalonline.agregarVehiculo(vehiculo1);
-        carrentalonline.agregarVehiculo(vehiculo2);
+        const vehiculo101 = {
+            id: 101,
+        };
+        carrentalonline.agregarVehiculo(vehiculo101);
+
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        const reserva1 = carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        const reserva2 = carrentalonline.reservar(2, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
+        const reservaeq = carrentalonline.reservar(reserva1);
+   
+        const reservasCliente = carrentalonline.reservasByClienteId(reserva1.clienteId);
 
-        const reservasCliente = carrentalonline.reservasByClienteId(usuario1.id);
-
-        assert.deepEqual(reservasCliente, [reserva1, reserva2]);
+        assert.equal(reservasCliente, reservaeq);
     });
+
     it("buscar reserva existente por número", function() {
         const vehiculo1 = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        const reserva1 = carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        const reserva2 = carrentalonline.reservar(1, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
+        const reservaeq = carrentalonline.reservar(reserva1);
+    
 
         const reservaEncontrada = carrentalonline.reservaByNumero(reserva1.numero);
 
-        assert.deepEqual(reservaEncontrada, reserva1);
+        assert.deepEqual(reservaEncontrada, reservaeq);
     });
 
     it("buscar reserva inexistente por número", function() {
         const vehiculo1 = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        carrentalonline.reservar(1, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
-
+        carrentalonline.reservar(reserva1);
+       
         const reservaNoEncontrada = carrentalonline.reservaByNumero("R123");
 
         assert.isNull(reservaNoEncontrada);
@@ -466,31 +466,30 @@ describe("car-rental-online", function() {
 
     it("buscar reserva existente por ID", function() {
         const vehiculo1 = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        const reserva1 = carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        const reserva2 = carrentalonline.reservar(1, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
+        const reservaeq = carrentalonline.reservar(reserva1);
+       
 
         const reservaEncontrada = carrentalonline.reservaById(reserva1.id);
 
-        assert.deepEqual(reservaEncontrada, reserva1);
+        assert.deepEqual(reservaEncontrada, reservaeq);
     });
 
     it("buscar reserva inexistente por ID", function() {
         const vehiculo1 = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        carrentalonline.reservar(1, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
-
+        carrentalonline.reservar(reserva1);
+       
         const reservaNoEncontrada = carrentalonline.reservaById(99);
 
         assert.isNull(reservaNoEncontrada);
@@ -501,7 +500,7 @@ describe("car-rental-online", function() {
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
         const vehiculo = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo);
 
@@ -517,14 +516,26 @@ describe("car-rental-online", function() {
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
         const vehiculo = {
-            id: 1,
+            id: 101,
         };
         carrentalonline.agregarVehiculo(vehiculo);
 
         const inicioReserva = new Date("2023-11-01T10:00:00.000Z").toISOString();
         const finReserva = new Date("2023-11-05T10:00:00.000Z").toISOString();
 
-        carrentalonline.reservar(vehiculo.id, inicioReserva, finReserva);
+        const reserva10 = {
+            id: 1,
+            inicio: inicioReserva,
+            fin: finReserva,
+            costo: Math.round((300 + Number.EPSILON) * 100) / 100,
+            numero: 'R001',
+            entrega: 'sitio a1',
+            devolucion: 'sitio b1',
+            fecha: new Date('2023-11-01T10:00:00.000Z'),
+            clienteId: 1,
+            vehiculoId: 101,
+        };
+        carrentalonline.reservar(reserva10);
 
         const inicio = new Date("2023-11-01T10:00:00.000Z").toISOString();
         const fin = new Date("2023-11-05T10:00:00.000Z").toISOString();
@@ -561,23 +572,20 @@ describe("car-rental-online", function() {
     });
 
     it("filtrar vehículos disponibles", function() {
-        const carrentalonline = new CarRentalOnline();
 
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
-
-        carrentalonline.agregarVehiculo(vehiculo1);
-        carrentalonline.agregarVehiculo(vehiculo2);
-        carrentalonline.agregarVehiculo(vehiculo3);
-        carrentalonline.agregarVehiculo(vehiculoelim);
-
-        const reserva1 = carrentalonline.reservar(1, new Date('2023-11-10T10:00:00.000Z'), new Date('2023-11-15T10:00:00.000Z'));
-        const reserva2 = carrentalonline.reservar(2, new Date('2023-12-05T10:00:00.000Z'), new Date('2023-12-10T10:00:00.000Z'));
+        const vehiculo = {
+            id: 101,
+        };
+     
+        carrentalonline.agregarVehiculo(vehiculo);
+        carrentalonline.agregarVehiculo(vehiculo2);  
 
         const vehiculosDisponibles1 = carrentalonline.disponibles(null, null, null, null, null, new Date('2023-11-01T10:00:00.000Z'), new Date('2023-11-09T10:00:00.000Z'));
 
         const vehiculosEsperados1 = vehiculosDisponibles1.map(vehiculo => vehiculo.id);
-        const idsEsperados = [vehiculo1.id, vehiculo2.id, vehiculo3.id, vehiculoelim.id];
+        const idsEsperados = [vehiculo.id,vehiculo2.id];
 
         assert.deepEqual(vehiculosEsperados1, idsEsperados);
 
@@ -623,34 +631,40 @@ describe("car-rental-online", function() {
     });
 
     it("cancelar tres reservas", function() {
-        const carrentalonline = new CarRentalOnline();
-
-        const vehiculo1 = {
+     
+          const vehiculo1 = {
             id: 101,
-            matricula: "ABC123",
         };
+
         carrentalonline.agregarVehiculo(vehiculo1);
 
         carrentalonline.agregarCliente(usuario1);
-
         carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
 
-        const reserva1 = carrentalonline.reservar(101, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
+        carrentalonline.reservar(reserva1);
 
         carrentalonline.cancelar(reserva1.numero);
 
         const reservaCancelada1 = carrentalonline.reservaByNumero(reserva1.numero);
         assert.strictEqual(reservaCancelada1, null);
 
-        const reserva2 = carrentalonline.reservar(101, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
+        
+        carrentalonline.agregarVehiculo(vehiculo2);
+        carrentalonline.reservar(reserva2);
+
         carrentalonline.cancelar(reserva2.numero);
+
         const reservaCancelada2 = carrentalonline.reservaByNumero(reserva2.numero);
         assert.strictEqual(reservaCancelada2, null);
 
-        const reserva3 = carrentalonline.reservar(101, new Date('2023-12-20T10:00:00.000Z'), new Date('2023-12-25T10:00:00.000Z'));
+        carrentalonline.agregarVehiculo(vehiculo3);
+        carrentalonline.reservar(reserva3);
+
         carrentalonline.cancelar(reserva3.numero);
+
         const reservaCancelada3 = carrentalonline.reservaByNumero(reserva3.numero);
         assert.strictEqual(reservaCancelada3, null);
+
     });
 
     it("Obtener reserva por número existente", function() {
@@ -665,11 +679,11 @@ describe("car-rental-online", function() {
             rol: "Cliente",
         };
 
-        carrentalonline.agregarVehiculo(vehiculo1)
+        carrentalonline.agregarVehiculo(vehiculo2)
         carrentalonline.agregarCliente(cliente1);
         carrentalonline.signin(cliente1.email, cliente1.password, cliente1.rol);
 
-        const reserva = carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
+        const reserva = carrentalonline.reservar(reserva2);
         const numeroReserva = reserva.numero;
 
         const reservaEncontrada = carrentalonline.reservaByNumero(numeroReserva);
@@ -682,6 +696,7 @@ describe("car-rental-online", function() {
     });
     it("Obtener reservas de un cliente", function() {
         const cliente1 = {
+            id: 2,
             dni: "12345678A",
             nombres: "Juan",
             apellidos: "Pérez",
@@ -691,16 +706,40 @@ describe("car-rental-online", function() {
             telefono: "123456789",
             rol: "Cliente",
         };
-        carrentalonline.agregarVehiculo(vehiculo1);
         carrentalonline.agregarVehiculo(vehiculo2);
+        carrentalonline.agregarVehiculo(vehiculo3);
         carrentalonline.agregarCliente(cliente1);
         carrentalonline.signin(cliente1.email, cliente1.password, cliente1.rol);
 
-        carrentalonline.reservar(1, new Date('2023-12-01T10:00:00.000Z'), new Date('2023-12-05T10:00:00.000Z'));
-        carrentalonline.reservar(2, new Date('2023-12-10T10:00:00.000Z'), new Date('2023-12-15T10:00:00.000Z'));
+        carrentalonline.reservar(reserva2);
+        carrentalonline.reservar(reserva3);
 
         const reservasDelCliente = carrentalonline.reservasByClienteId(cliente1.id);
         expect(reservasDelCliente.length).to.equal(2);
     });
+   it("Set Perfil",function(){
+    carrentalonline.signin(usuario1);
+    const perfil = {
+        nombres: 'Nombre',
+        apellidos: 'Apellido',
+        email: 'correo@ejemplo.com',
+        telefono: '123456789',
+        direccion: 'Dirección',
+        contrasena: 'password',
+        contrasenaRepetida: 'password',
+        re
+    };
+    const perfil2 = {
+        nombres: 'Nombre',
+        apellidos: 'Apellido',
+        email: 'correo@ejemplo.com',
+        telefono: '123456789',
+        direccion: 'Dirección',
+        contrasena: '1234',
+        contrasenaRepetida: 'password',
+    };
+    assert.equal(carrentalonline.setPerfil(perfil),true)
+    assert.throws(() => carrentalonline.setPerfil(perfil2),'Las contraseñas no coinciden');
+   })
 
 })

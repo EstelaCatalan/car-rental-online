@@ -301,33 +301,34 @@ class CarRentalOnline {
 		return vehiculosDisponibles;
 	  }
 	  
-	reservar(vehiculoId, inicio, fin) {
+	  reservar(reserva) {
+	
 		if (this.usuario === null || this.usuario.rol !== "Cliente") {
 			throw new Error("Debe iniciar sesión como cliente para realizar una reserva");
 		}
-
-		const vehiculoDisponible = this.disponibilidad(vehiculoId, inicio, fin);
+	
+		if (reserva.inicio >= reserva.fin) {
+			throw new Error("La fecha de inicio debe ser anterior a la fecha de fin");
+		}
+	
+		const fechaActual = new Date();
+		if (reserva.fecha > reserva.inicio) {
+			throw new Error("La fecha de la reserva no debe ser mayor que la fecha de inicio");
+		}
+	
+		const vehiculoDisponible = this.disponibilidad(reserva.vehiculoId, reserva.inicio, reserva.fin);
 		if (!vehiculoDisponible) {
 			throw new Error("El vehículo no está disponible en el período especificado");
 		}
-
-		const nuevaReserva = {
-			id: this.genId(),
-			inicio: inicio,
-			fin: fin,
-			costo: 0,
-			numero: `R${this.lastid.toString().padStart(3, "0")}`,
-			entrega: "sitio 1",
-			devolucion: "sitio 2",
-			fecha: new Date(),
-			clienteId: this.usuario.id,
-			vehiculoId: vehiculoId,
-		};
-
-		this._reservas.push(nuevaReserva);
-
-		return nuevaReserva;
+	
+		reserva.id = this.genId();
+		reserva.numero = `R${this.lastid.toString().padStart(3, "0")}`;
+	
+		this._reservas.push(reserva);
+	
+		return reserva;
 	}
+	
 	cancelar(numero) {
         const reservaIndex = this._reservas.findIndex(reserva => reserva.numero === numero);
 

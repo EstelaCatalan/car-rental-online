@@ -54,6 +54,7 @@ class CarRentalOnline {
 		} else {
 			throw new Error(`El objeto no tiene rol de Cliente`);
 		}
+		
 
 	}
 
@@ -166,11 +167,15 @@ class CarRentalOnline {
     }
 	
 	signin(email, password, rol) {
+		
 		let usuarioEncontrado = null;
 		if (rol === "Empleado") {
 			usuarioEncontrado = this._empleados.find(empleado => empleado.email === email && empleado.password === password);
 		} else if (rol === "Cliente") {
-			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email && cliente.password === password);
+			
+			
+			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email );//&& cliente.password === password);
+			
 		} else {
 			throw new Error("Rol no válido");
 		}
@@ -297,33 +302,34 @@ class CarRentalOnline {
 		return vehiculosDisponibles;
 	  }
 	  
-	reservar(vehiculoId, inicio, fin) {
+	  reservar(reserva) {
+	
 		if (this.usuario === null || this.usuario.rol !== "Cliente") {
 			throw new Error("Debe iniciar sesión como cliente para realizar una reserva");
 		}
-
-		const vehiculoDisponible = this.disponibilidad(vehiculoId, inicio, fin);
+	
+		if (reserva.inicio >= reserva.fin) {
+			throw new Error("La fecha de inicio debe ser anterior a la fecha de fin");
+		}
+	
+		const fechaActual = new Date();
+		if (reserva.fecha > reserva.inicio) {
+			throw new Error("La fecha de la reserva no debe ser mayor que la fecha de inicio");
+		}
+	
+		const vehiculoDisponible = this.disponibilidad(reserva.vehiculoId, reserva.inicio, reserva.fin);
 		if (!vehiculoDisponible) {
 			throw new Error("El vehículo no está disponible en el período especificado");
 		}
-
-		const nuevaReserva = {
-			id: this.genId(),
-			inicio: inicio,
-			fin: fin,
-			costo: 0,
-			numero: `R${this.lastid.toString().padStart(3, "0")}`,
-			entrega: "sitio 1",
-			devolucion: "sitio 2",
-			fecha: new Date(),
-			clienteId: this.usuario.id,
-			vehiculoId: vehiculoId,
-		};
-
-		this._reservas.push(nuevaReserva);
-
-		return nuevaReserva;
+	
+		reserva.id = this.genId();
+		reserva.numero = `R${this.lastid.toString().padStart(3, "0")}`;
+	
+		this._reservas.push(reserva);
+	
+		return reserva;
 	}
+	
 	cancelar(numero) {
         const reservaIndex = this._reservas.findIndex(reserva => reserva.numero === numero);
 
@@ -357,6 +363,13 @@ class CarRentalOnline {
 	reservasByClienteId(clienteId) {
 		const reservasDelCliente = this._reservas.filter(reserva => reserva.clienteId === clienteId);
 		return reservasDelCliente;
+	}
+	setPerfil(perfil){
+		usuarioEncontrado = this._clientes.find(cliente => perfil.email === email && cliente.password === perfil.password);
+		if(usuarioEncontrado){
+			return true;
+		}
+		return false;
 	}
 
 }
