@@ -38,8 +38,6 @@ app.put('/car-rental-online/api/reservas', (req, res) => {
     try {
         const nuevasReservas = req.body;
 
-        model.setReservas([]);
-
         model.setReservas(nuevasReservas);
 
         const reservasActualizadas = model.getReservas();
@@ -54,6 +52,49 @@ app.put('/car-rental-online/api/reservas', (req, res) => {
 
 app.get('/car-rental-online/componentes', (req, res) => {
     res.sendFile(__dirname + '/public/components');
+});
+app.get('/car-rental-online/api/reservas/:id', (req, res) => {
+    try {
+
+        const reservaId = req.params.id;
+
+        const reserva = model.reservaById(reservaId);
+
+        if (!reserva) {
+            res.status(404).json({ message: 'Reserva no encontrada' });
+            return;
+        }
+
+        res.json(reserva);
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener la reserva' });
+    }
+});
+app.delete('/car-rental-online/api/reservas', (req, res) => {
+    try {
+        const numeroReserva = req.query.numero;
+
+        if (!numeroReserva) {
+            return res.status(400).json({ error: 'Número de reserva no proporcionado' });
+        }
+        try {
+        const resultado = model.cancelar(numeroReserva);
+        } catch (error) {
+            res.status(404).json({ error: 'Reserva no encontrada' });
+        }
+
+        if (resultado) {
+            res.json({ message: `Reserva con número ${numeroReserva} cancelada` });
+        } else {
+            res.status(404).json({ error: `No se encontró una reserva ${numeroReserva}` });
+        }
+
+    } catch (error) {
+
+        res.status(500).json({ error: 'Error DELETE reservas' });
+    }
 });
 
 app.get('/car-rental-online/model', (req, res) => {

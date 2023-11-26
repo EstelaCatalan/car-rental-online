@@ -6,13 +6,17 @@ class CarRentalOnline {
 	lastid
 	usuario
 	_reservas
-	constructor() {
+	constructor(){
 		this._vehiculos = new Array();
 		this._clientes = new Array();
 		this._empleados = new Array();
 		this._reservas = new Array();
 		this.lastid = 0;
 		this.usuario = null;
+	}
+	setReservas(reservas) {
+		this._reservas.length = 0;
+		this._reservas.push(reservas);
 	}
 	genId() {
 		this.lastid++;
@@ -371,9 +375,6 @@ class CarRentalOnline {
 		}
 		return false;
 	}
-	setReservas(reservas) {
-        this.reservas = reservas;
-    }
 
 }
 
