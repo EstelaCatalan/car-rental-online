@@ -371,6 +371,9 @@ class CarRentalOnline {
 		}
 		return false;
 	}
+	setReservas(reservas) {
+        this.reservas = reservas;
+    }
 
 }
 

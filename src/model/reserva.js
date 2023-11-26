@@ -1,4 +1,3 @@
-
 class Reserva {
 	_id;
 	_inicio;
