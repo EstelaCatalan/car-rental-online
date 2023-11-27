@@ -42,7 +42,22 @@ app.get('/car-rental-online/api/reservas', (req, res) => {
         res.status(500).json({ error: 'Error al obtener las reservas' });
     }
 });
+app.put('/car-rental-online/api/vehiculos', (req, res) => {
+    try {
+        const nuevosVehiculos = req.body;
 
+        const vehiculosTransformados = nuevosVehiculos.map(vehiculoData => new CarRentalOnline.Vehiculo(vehiculoData));
+
+        model.setVehiculos([]);
+
+        model.setVehiculos(vehiculosTransformados);
+
+        res.status(200).json(model.getVehiculos());
+    } catch (error) {
+        console.error('Error al procesar el pedido PUT de vehículos:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor al actualizar vehículos' });
+    }
+});
 app.put('/car-rental-online/api/reservas', (req, res) => {
     try {
         const nuevasReservas = req.body;
