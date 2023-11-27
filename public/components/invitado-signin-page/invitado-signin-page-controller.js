@@ -15,6 +15,7 @@ class InvitadoSigninPageController extends PageController {
         if (valid) {
             try {
                 this.model.signin(this.usuarioEmail, this.usuarioContraseña, this.usuarioRol);
+                
 
                 if (this.usuarioRol == "Empleado") {
                     event.target.href = '/car-rental-online/empleado-home-page';

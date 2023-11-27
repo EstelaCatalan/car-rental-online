@@ -11,28 +11,41 @@ class ClientePerfilPageController extends PageController {
     get clienteDireccion() { return this.view.clienteDireccionInputValue; }
     get clientePassword() { return this.view.clientePasswordInputValue; }
     get clientePassword2() { return this.view.clientePassword2InputValue; }
-    getUsuario(){this.model.perfil();}
-    get dni(){ return this.dni; }
-    async guardar(event){
+
+    async obtenerUsuarioYMostrarDNI(userId) {
+        try {
+            const userData = await this.model.clienteById(id)(userId); 
+            const userDNI = userData.dni; 
+            this.view.usuario = userDNI; 
+        } catch (error) {
+            console.error("Error al obtener la información del usuario:", error);
+        }
+    }
+  
+    async guardar(event) {
         event.preventDefault;
-        const cliente = {
-            
-            nombres: this.clienteNombres,
-            apellidos: this.clienteApellidos,
-            direccion: this.clienteDireccion,
-            email: this.clienteEmail,
-            password: this.clientePassword,
-            telefono: this.clienteTelefono
+        this.view.form.reportValidity();
+        let valid = this.view.form.checkValidity();
+        if (valid) {
+            const cliente = {
 
-        };
-        try{
+                nombres: this.clienteNombres,
+                apellidos: this.clienteApellidos,
+                direccion: this.clienteDireccion,
+                email: this.clienteEmail,
+                password: this.clientePassword,
+                telefono: this.clienteTelefono
 
-            this.model.setPerfil(cliente)
-            event.target.href = '/car-rental-online/invitado-home-page';
-            await Router.route(event);
-        }catch (err) {
-            console.error(err.message)
+            };
+            try {
 
+                this.model.setPerfil(cliente)
+                event.target.href = '/car-rental-online/invitado-home-page';
+                await Router.route(event);
+            } catch (err) {
+                console.error(err.message)
+
+            }
         }
     }
     async signout(event) {

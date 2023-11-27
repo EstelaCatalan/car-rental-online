@@ -1,11 +1,11 @@
 class ClientePerfilPageView extends PageView {
-    
+
     constructor() { super('cliente-perfil-page'); }
-    
-   set usuario(dni){
-    return document.getElementById('usuarioDNI').innerHTML=nombre;
-   }
-   get form() { return document.getElementById('perfilform'); }
+
+    set usuario(dni) {
+        return document.getElementById('usuarioDNI').innerHTML = dni;
+    }
+    get form() { return document.getElementById('perfilform'); }
 
 
     get clienteNombresInput() { return document.getElementById('clienteNombres'); }
@@ -29,7 +29,13 @@ class ClientePerfilPageView extends PageView {
     get clientePassword2Input() { return document.getElementById('clientePassword2'); }
     get clientePassword2InputValue() { return this.clientePassword2Input.value; }
 
+    set usuario(dni) {
+        let dniElement = document.getElementById('usuarioDNI');
+        if (dniElement) {
+            dniElement.innerHTML = dni; 
+        }
 
 
 
+}
 }
