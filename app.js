@@ -17,7 +17,16 @@ const model = new CarRentalOnline();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/car-rental-online/api/vehiculos', (req, res) => {
+    try {
+        const vehiculos = model.getVehiculos();
 
+        res.status(200).json(vehiculos);
+    } catch (error) {
+        console.error('Error al procesar el pedido GET de vehículos:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor al obtener vehículos' });
+    }
+});
 
 
 app.get('/car-rental-online/api/reservas', (req, res) => {
