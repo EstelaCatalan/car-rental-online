@@ -2,8 +2,8 @@ class ClientePerfilPageController extends PageController {
     constructor(model) {
         super(model);
         this.view = new ClientePerfilPageView();
+        this.view.mostrarPerfil(usuario);
     }
-
     get clienteNombres() { return this.view.clienteNombresInputValue; }
     get clienteApellidos() { return this.view.clienteApellidosInputValue; }
     get clienteEmail() { return this.view.clienteEmailInputValue; }
@@ -11,63 +11,48 @@ class ClientePerfilPageController extends PageController {
     get clienteDireccion() { return this.view.clienteDireccionInputValue; }
     get clientePassword() { return this.view.clientePasswordInputValue; }
     get clientePassword2() { return this.view.clientePassword2InputValue; }
+   
 
-    async obtenerUsuarioYMostrarDNI(userId) {
-        try {
-            const userData = await this.model.clienteById(id)(userId); 
-            const userDNI = userData.dni; 
-            this.view.usuario = userDNI; 
-        } catch (error) {
-            console.error("Error al obtener la información del usuario:", error);
-        }
-    }
-  
     async guardar(event) {
-        event.preventDefault;
+        event.preventDefault();
         this.view.form.reportValidity();
         let valid = this.view.form.checkValidity();
         if (valid) {
             const cliente = {
-
-                nombres: this.clienteNombres,
-                apellidos: this.clienteApellidos,
-                direccion: this.clienteDireccion,
-                email: this.clienteEmail,
-                password: this.clientePassword,
-                telefono: this.clienteTelefono
-
+                nombres: this.view.clienteNombresInputValue,
+                apellidos: this.view.clienteApellidosInputValue,
+                direccion: this.view.clienteDireccionInputValue,
+                email: this.view.clienteEmailInputValue,
+                password: this.view.clientePasswordInputValue,
+                telefono: this.view.clienteTelefonoInputValue
             };
             try {
-
-                this.model.setPerfil(cliente)
+                await this.model.setPerfil(cliente);
                 event.target.href = '/car-rental-online/invitado-home-page';
                 await Router.route(event);
             } catch (err) {
-                console.error(err.message)
-
+                console.error(err.message);
             }
         }
     }
+
     async signout(event) {
-        event.preventDefault;
+        event.preventDefault();
         if (this.model.usuario) {
             try {
-                this.model.signout();
+                await this.model.signout();
                 event.target.href = '/car-rental-online/invitado-home-page';
                 await Router.route(event);
             } catch (err) {
-                console.error(err.message)
-                //mensajes.agregarError(err.message);
+                console.error(err.message);
+                // mensajes.agregarError(err.message);
             }
-
         }
-
     }
+
     async refresh(url) {
         await super.refresh(url);
-        let dni = this.dni
-        if (dni) this.view.usuarioDNI = dni;
+        let dni = this.model.usuario.dni; 
+        if (dni) this.view.usuario = dni; 
     }
-
-
 }
