@@ -30,7 +30,11 @@ class InvitadoSignupPageView extends PageView {
 
     get clienteRolInput() { return document.getElementById('rol'); }
     get clienteRolInputValue() { return this.clienteRolInput.value; }
-
+    async refresh(url){
+        await super.refresh();
+        await mensajes.refresh();
+        }
+        
 
 
 

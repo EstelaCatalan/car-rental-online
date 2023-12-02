@@ -19,27 +19,28 @@ class InvitadoSigninPageController extends PageController {
 
                 if (this.usuarioRol == "Empleado") {
                     event.target.href = '/car-rental-online/empleado-home-page';
-                    router.route(event);
+                    
 
                 }
                 if (this.usuarioRol == "Cliente") {
                     event.target.href = '/car-rental-online/cliente-home-page';
-                    router.route(event);
+                    
 
                 }
 
             }
-            catch (err) {
-                console.log( err.message);
-                //mensajes.agregarError(err.message);
+            catch (e) {
+                console.error(e);
+                await mensajes.agregarError(e.message?e.message:e);
 
+
+            }finally{
+                router.route(event);
             }
         }
 
     }
-    async refresh(url) {
-        await super.refresh(url);
-    }
+   
 
 
 }

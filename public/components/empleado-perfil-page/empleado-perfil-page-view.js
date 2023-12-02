@@ -35,8 +35,13 @@ class EmpleadoPerfilPageView extends PageView {
         const dniElement = document.getElementById('usuarioDNI');
         if (dniElement && usuario.dni) {
             dniElement.textContent = usuario.dni;
-        }
-    }
+        }}
+        async refresh(url){
+            await super.refresh();
+            await mensajes.refresh();
+            }
+            
+    
 
 }
 

@@ -29,9 +29,15 @@ class EmpleadoPerfilPageController extends PageController {
             try {
                 await this.model.setPerfil(cliente);
                 event.target.href = '/car-rental-online/invitado-home-page';
+                await mensajes.agregarSuccces('Empleado modificado')
+
+                
+            } catch (e) {
+                console.error(e);
+                await mensajes.agregarError(e.message?e.message:e);
+
+            }finally{
                 await Router.route(event);
-            } catch (err) {
-                console.error(err.message);
             }
         }
     }
@@ -42,10 +48,11 @@ class EmpleadoPerfilPageController extends PageController {
             try {
                 await this.model.signout();
                 event.target.href = '/car-rental-online/invitado-home-page';
+                await mensajes.agregarSuccces('Empleado ha salido satisfactoriamente');
                 await Router.route(event);
-            } catch (err) {
-                console.error(err.message);
-                // mensajes.agregarError(err.message);
+            } catch (e) {
+                console.error(e);
+                await mensajes.agregarError(e.message?e.message:e);
             }
         }
     }
@@ -54,5 +61,6 @@ class EmpleadoPerfilPageController extends PageController {
         await super.refresh(url);
         let dni = this.model.usuario.dni; 
         if (dni) this.view.usuario = dni; 
+        mensajes.agregarInfo('dni cargado');
     }
 }

@@ -9,10 +9,16 @@ class EmpleadoHomePageController extends PageController {
             try {
                 this.model.signout();
                 event.target.href = '/car-rental-online/invitado-home-page';
+                await mensajes.agregarSuccces('El empleado ha salido satisfactoriamente')
+
+                
+            } catch (e) {
+                console.error(e);
+                await mensajes.agregarError(e.message?e.message:e);
+
+                
+            }finally{
                 await Router.route(event);
-            } catch (err) {
-                console.error(err.message)
-                //mensajes.agregarError(err.message);
             }
 
         }

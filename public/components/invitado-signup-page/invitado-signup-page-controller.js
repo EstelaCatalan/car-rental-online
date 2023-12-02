@@ -17,36 +17,43 @@ class InvitadoSignupPageController extends PageController {
         event.preventDefault();
         this.view.form.reportValidity();
         let valid = this.view.form.checkValidity();
-
-        if (valid) {
-            if (this.clientePassword == this.clientePassword2) {
-                const cliente = {
-                    dni: this.clienteDni,
-                    nombres: this.clienteNombres,
-                    apellidos: this.clienteApellidos,
-                    direccion: this.clienteDireccion,
-                    email: this.clienteEmail,
-                    password: this.clientePassword,
-                    telefono: this.clienteTelefono,
-                    rol: this.clienteRol
-
-
-                };
-                if (this.clienteRol == "Cliente") {
+        try {
+            if (valid) {
+                event.target.href = "/car-rental-online/invitado-home-page";
+                if (this.clientePassword == this.clientePassword2) {
+                    const cliente = {
+                        dni: this.clienteDni,
+                        nombres: this.clienteNombres,
+                        apellidos: this.clienteApellidos,
+                        direccion: this.clienteDireccion,
+                        email: this.clienteEmail,
+                        password: this.clientePassword,
+                        telefono: this.clienteTelefono,
+                        rol: this.clienteRol
 
 
-                    this.model.agregarCliente(cliente);
-                   
-                }
-                if (this.clienteRol == "Empleado") {
-                    this.model.agregarEmpleado(cliente);
-                    
+                    };
+                    if (this.clienteRol == "Cliente") {
+
+
+                        this.model.agregarCliente(cliente);
+
+                    }
+                    if (this.clienteRol == "Empleado") {
+                        this.model.agregarEmpleado(cliente);
+
+                    }
                 }
             }
 
-            event.target.href = "/car-rental-online/invitado-home-page";
-            router.route(event);
 
+            
+
+        } catch (e) {
+            console.error(e);
+            await mensajes.agregarError(e.message ? e.message : e);
+        }finally{
+            router.route(event);
         }
 
 
@@ -55,8 +62,6 @@ class InvitadoSignupPageController extends PageController {
 
 
 
-    async refresh(url) {
-        await super.refresh(url);
-    }
+
 
 }

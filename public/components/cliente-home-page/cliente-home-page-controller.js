@@ -9,20 +9,17 @@ class ClienteHomePageController extends PageController {
             try {
                 this.model.signout();
                 event.target.href = '/car-rental-online/invitado-home-page';
+                await mensajes.agregarSuccces('Ha salido de la cuenta')
+            } catch (e) {
+                console.error(e)
+                await mensajes.agregarError(e.message ? e.message : e);
+            } finally {
                 await Router.route(event);
-            } catch (err) {
-                console.error(err.message)
-                //mensajes.agregarError(err.message);
             }
-            
+
         }
-        
-    }
-    async refresh(url){
-        
-        await super.refresh(url);
-        
 
     }
+   
 
 }

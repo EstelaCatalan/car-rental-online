@@ -8,7 +8,11 @@ get usuarioContraseñaInput() { return document.getElementById('Contraseña'); }
 get usuarioContraseñaInputValue() { return this.usuarioContraseñaInput.value; }
 get usuarioRolInput() { return document.getElementById('rol'); }
 get usuarioRolInputValue() { return this.usuarioRolInput.value; }
-async refresh(url) {await super.refresh(url);}
+async refresh(url){
+    await super.refresh();
+    await mensajes.refresh();
+    }
+    
 
 
 }

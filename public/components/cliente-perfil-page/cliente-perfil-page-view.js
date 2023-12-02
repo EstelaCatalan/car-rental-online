@@ -37,6 +37,11 @@ class ClientePerfilPageView extends PageView {
             dniElement.textContent = usuario.dni;
         }
     }
+    async refresh(url){
+        await super.refresh();
+        await mensajes.refresh();
+        }
+        
 
 }
 
