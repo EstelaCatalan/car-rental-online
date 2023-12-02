@@ -1,5 +1,12 @@
 const express = require('express')
+<<<<<<< Updated upstream
 const CarRentalOnline = require('./src/model/car-rental-online.js');
+=======
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const CarRentalOnline = require('./src/model/car-rental-online');
+let model = new CarRentalOnline();
+>>>>>>> Stashed changes
 const fs = require('fs');
 const app = express()
 const port = 3000
@@ -149,9 +156,24 @@ app.get(/^\/car-rental-online/, (req, res) => {
 app.get('/car-rental-online/css', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/css'));
 });
+<<<<<<< Updated upstream
 
 
 
 module.exports = app;
 
 
+=======
+app.get('/car-rental-online/api/clientes', (req, res) => {
+    try {
+        
+        const clientes = model.getClientes();
+
+        
+        res.status(200).json(clientes);
+    } catch (error) {
+        
+        res.status(500).json({ error: 'Error al obtener los clientes' });
+    }
+});
+>>>>>>> Stashed changes
