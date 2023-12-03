@@ -178,7 +178,7 @@ class CarRentalOnline {
 		} else if (rol === "Cliente") {
 			
 			
-			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email );//&& cliente.password === password);
+			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email && cliente.password === password);
 			
 		} else {
 			throw new Error("Rol no válido");
@@ -368,11 +368,22 @@ class CarRentalOnline {
 		const reservasDelCliente = this._reservas.filter(reserva => reserva.clienteId === clienteId);
 		return reservasDelCliente;
 	}
+	
 	setPerfil(perfil){
-		usuarioEncontrado = this._clientes.find(cliente => perfil.email === email && cliente.password === perfil.password);
+		
+		const usuarioEncontrado = this._clientes.find(cliente => perfil.dni === cliente.dni );
 		if(usuarioEncontrado){
-			return true;
+			if(perfil.contrasena==perfil.contrasenaRepetida){
+			usuarioEncontrado.nombres=perfil.nombres;
+			usuarioEncontrado.apellidos=perfil.apellidos;
+			usuarioEncontrado.telefono=perfil.telefono;
+			usuarioEncontrado.password=perfil.contrasena;
+
+			return true;}
+			throw new Error("Las contraseñas no coinciden");
+
 		}
+		throw new Error("Usuario no encontrado");
 		return false;
 	}
 

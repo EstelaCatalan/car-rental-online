@@ -40,6 +40,16 @@ describe('Car Rental Online REST API pruebas', () => {
                 password: 'password1',
                 telefono: 'telefono1',
                 rol: 'Cliente',
+            };
+            const usuario2 = {
+                dni: '1234',
+                nombres: 'nombre2',
+                apellidos: 'apellidos2',
+                direccion: 'direccion2',
+                email: 'email2',
+                password: 'password2',
+                telefono: 'telefono2',
+                rol: 'Cliente',
             }
 
 
@@ -51,6 +61,8 @@ describe('Car Rental Online REST API pruebas', () => {
 
             carrentalonline.agregarCliente(usuario1);
             carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+            carrentalonline.agregarCliente(usuario2);
+            carrentalonline.signin(usuario2.email, usuario2.password, usuario2.rol);
 
             carrentalonline.reservar(reserva1);
 
@@ -82,7 +94,12 @@ describe('Car Rental Online REST API pruebas', () => {
         } catch (error) {
             throw error;
         }
-    });
+    },
+    it(`PUT ${URL}/car-rental-online/api/clientes`,function(){
+        
+
+    })
+    );
 
     it(`GET ${URL}/car-rental-online/api/reservas con código 200`, async () => {
 

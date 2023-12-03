@@ -718,8 +718,10 @@ describe("car-rental-online", function() {
         expect(reservasDelCliente.length).to.equal(2);
     });
    it("Set Perfil",function(){
-    carrentalonline.signin(usuario1);
+    carrentalonline.agregarCliente(usuario1);
+    carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
     const perfil = {
+        dni:usuario1.dni,
         nombres: 'Nombre',
         apellidos: 'Apellido',
         email: 'correo@ejemplo.com',
@@ -727,9 +729,10 @@ describe("car-rental-online", function() {
         direccion: 'Dirección',
         contrasena: 'password',
         contrasenaRepetida: 'password',
-        re
+        
     };
     const perfil2 = {
+        dni:usuario1.dni,
         nombres: 'Nombre',
         apellidos: 'Apellido',
         email: 'correo@ejemplo.com',
