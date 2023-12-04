@@ -95,7 +95,27 @@ describe('Car Rental Online REST API pruebas', () => {
             throw error;
         }
     },
-    it(`PUT ${URL}/car-rental-online/api/clientes`,function(){
+    it(`PUT ${URL}/car-rental-online/api/clientes`,async function(){
+        try{
+            const usuario= [{
+                "_id":"2",
+                "dni": "1234",
+                "nombres": "nombre1",
+                "apellidos": "apellidos1",
+                "direccion": "direccion1",
+                "email": "email1",
+                "password": "password1",
+                "telefono": "telefono1",
+                "rol": "Cliente"
+            }];
+            const response = await chai.request(URL).put('/car-rental-online/api/clientes').send(usuario);
+            assert.equal(response.status, 200, 'El código de estado debe ser 200');
+            assert.equal(usuario.length, response.body.length, 'La cantidad de objetos debe ser la misma');
+
+        }catch(error){
+            throw error;
+
+        }
         
 
     })
@@ -157,5 +177,17 @@ describe('Car Rental Online REST API pruebas', () => {
                 throw error;
             }
         });
+    });
+    it(`GET ${URL}/car-rental-online/api/clientes`, async () => {
+
+        try {
+            const response = await chai.request(URL).get('/car-rental-online/api/clientes').send();
+
+            assert.equal(response.status, 200);
+
+        } catch (error) {
+            throw error;
+        }
+
     });
 });
