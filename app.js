@@ -30,26 +30,27 @@ app.get('/car-rental-online/model', (req, res) => {
 app.get('/car-rental-online/test', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/test/index.html'));
 });
-app.get(/^\/car-rental-online/, (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
-});
+//app.get(/^\/car-rental-online/, (req, res) => {
+// res.sendFile(path.join(__dirname, '/public/index.html'));
+//});
 app.get('/car-rental-online/css', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/css'));
 });
 app.get('/car-rental-online/api/clientes', (req, res) => {
-    res.status(200).json(model.getClientes());
+    res.status(200).json(model._clientes);
 });
 app.put('/car-rental-online/api/clientes', (req, res) => {
     let clientes = req.body;
     model._clientes = clientes.map(u => {
-        let cliente = model.agregarCliente(u);
+        model.agregarCliente(u);
+        let cliente = u;
         Object.assign(cliente, u)
         return cliente;
     });
     res.status(200).json(model._clientes);
 });
 app.get('/car-rental-online/api/empleados', (req, res) => {
-    res.status(200).json(model.getEmpleados());
+    res.status(200).json(model._empleados);
 });
 app.put('/car-rental-online/api/empleados', (req, res) => {
     let empleados = req.body;
@@ -60,3 +61,76 @@ app.put('/car-rental-online/api/empleados', (req, res) => {
     });
     res.status(200).json(model._empleados);
 });
+app.delete('/car-rental-online/api/clientes/:cid', (req, res) => {
+    let cid = req.params.cid;
+    let usuario = model.clienteById(cid);
+    if (!usuario)
+        res.status(404).json({
+            message: `Usuario con id ${cid} no encontrado` });
+    else {
+        model._clientes = model._clientes.filter(cliente => cliente.id !== cid);
+        res.status(200).json(usuario);
+    }
+
+})
+app.delete('/car-rental-online/api/empleados/:eid', (req, res) => {
+    let eid = req.params.eid;
+    let usuario = model.empleadoById(eid);
+    if (!usuario)
+        res.status(404).json({
+            message: `Empleado con id ${eid} no encontrado` });
+    else {
+        model._empleados = model._empleados.filter(empleado => empleado.id !== eid);
+        res.status(200).json(usuario);
+    }
+
+})
+app.get('/car-rental-online/api/clientes?email=', (req,res)=>{
+    let email= req.params.email;
+    let usuario= model.clienteByEmail(email);
+    if(!usuario)
+        res.status(404).json({
+            message:`Cliente con email ${email} no encontrado` 
+    });
+    else{
+        res.status(200).json(usuario);
+    }
+})
+app.get('/car-rental-online/api/empleados?email=', (req,res)=>{
+    let email= req.params.email;
+    let usuario= model.empleadoByEmail(email);
+    if(!usuario)
+        res.status(404).json({
+            message:`Empleado con email ${email} no encontrado` 
+    });
+    else{
+        res.status(200).json(usuario);
+    }
+})
+app.get('/car-rental-online/api/clientes/:cid', (req,res)=>{
+    let id= req.params.cid;
+    let usuario= model.clienteByid(id);
+    if(!usuario)
+        res.status(404).json({
+            message:`Cliente con id ${id} no encontrado` 
+    });
+    else{
+        res.status(200).json(usuario);
+    }
+})
+app.get('/car-rental-online/api/empleados/:eid', (req,res)=>{
+    let id= req.params.eid;
+    let usuario= model.empleadoByid(id);
+    if(!usuario)
+        res.status(404).json({
+            message:`Empleado con id ${id} no encontrado` 
+    });
+    else{
+        res.status(200).json(usuario);
+    }
+})
+app.post('/car-rental-online/api/signin',(req,res)=>{
+    let usuario=req.body;
+    model.signin(usuario);
+    res.status(200).json(usuario);
+})
