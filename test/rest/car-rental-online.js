@@ -1,9 +1,12 @@
 const assert = require("chai").assert;
 const chai = require('chai');
+const request = require('supertest');
 const chaiHttp = require('chai-http');
 const app = require('../../app');
 const CarRentalOnline = require("../../src/model/car-rental-online");
 const Reserva = require("../../src/model/reserva");
+const Cliente = require("../../src/model/cliente");
+const Empleado=require("../../src/model/empleado")
 
 chai.use(chaiHttp);
 
@@ -31,7 +34,8 @@ describe('Car Rental Online REST API pruebas', () => {
                 clienteId: 1,
                 vehiculoId: 101,
             };
-            const usuario1 = {
+            const cliente1 = {
+                _id:'1',
                 dni: '123',
                 nombres: 'nombre1',
                 apellidos: 'apellidos1',
@@ -41,7 +45,8 @@ describe('Car Rental Online REST API pruebas', () => {
                 telefono: 'telefono1',
                 rol: 'Cliente',
             };
-            const usuario2 = {
+            const empleado1 = {
+                _id:'2',
                 dni: '1234',
                 nombres: 'nombre2',
                 apellidos: 'apellidos2',
@@ -49,7 +54,7 @@ describe('Car Rental Online REST API pruebas', () => {
                 email: 'email2',
                 password: 'password2',
                 telefono: 'telefono2',
-                rol: 'Cliente',
+                rol: 'Empleado',
             }
 
 
@@ -59,11 +64,8 @@ describe('Car Rental Online REST API pruebas', () => {
 
             carrentalonline.agregarVehiculo(vehiculo1);
 
-            carrentalonline.agregarCliente(usuario1);
-            carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
-            carrentalonline.agregarCliente(usuario2);
-            carrentalonline.signin(usuario2.email, usuario2.password, usuario2.rol);
-
+            carrentalonline.agregarCliente(cliente1);
+            carrentalonline.signin(cliente1.email, cliente1.password, cliente1.rol);
             carrentalonline.reservar(reserva1);
 
         });
@@ -94,11 +96,35 @@ describe('Car Rental Online REST API pruebas', () => {
         } catch (error) {
             throw error;
         }
-    },
+    });
+    it(`PUT ${URL}/car-rental-online/api/empleados`,async function(){
+        try{
+            const usuario= [{
+                "id":"3",
+                "dni": "12345",
+                "nombres": "nombre2",
+                "apellidos": "apellidos2",
+                "direccion": "direccion2",
+                "email": "email2",
+                "password": "password2",
+                "telefono": "telefono2",
+                "rol": "Empleado"
+            }];
+            const response = await chai.request(URL).put('/car-rental-online/api/empleados').send(usuario);
+            assert.equal(response.status, 200, 'El código de estado debe ser 200');
+            assert.equal(usuario.length, response.body.length, 'La cantidad de objetos debe ser la misma');
+
+        }catch(error){
+            throw error;
+
+        }
+        
+
+    });
     it(`PUT ${URL}/car-rental-online/api/clientes`,async function(){
         try{
             const usuario= [{
-                "_id":"2",
+                "id":"2",
                 "dni": "1234",
                 "nombres": "nombre1",
                 "apellidos": "apellidos1",
@@ -118,8 +144,8 @@ describe('Car Rental Online REST API pruebas', () => {
         }
         
 
-    })
-    );
+    });
+    
 
     it(`GET ${URL}/car-rental-online/api/reservas con código 200`, async () => {
 
@@ -202,29 +228,222 @@ describe('Car Rental Online REST API pruebas', () => {
         }
 
     });
-    it(`PUT ${URL}/car-rental-online/api/empleados`,async function(){
-        try{
-            const usuario= [{
-                "_id":"3",
-                "dni": "12345",
-                "nombres": "nombre2",
-                "apellidos": "apellidos2",
-                "direccion": "direccion2",
-                "email": "email2",
-                "password": "password2",
-                "telefono": "telefono2",
-                "rol": "Empleado"
-            }];
-            const response = await chai.request(URL).put('/car-rental-online/api/empleados').send(usuario);
-            assert.equal(response.status, 200, 'El código de estado debe ser 200');
-            assert.equal(usuario.length, response.body.length, 'La cantidad de objetos debe ser la misma');
+    describe('DELETE /car-rental-online/api/clientes/:cid', function() {
+        it('Debe borrar el cliente con id=cid', async () => {
+            try {
+                let cid='2';
+                const response = await chai.request(app).delete(`/car-rental-online/api/clientes/${cid}`);
 
-        }catch(error){
+                assert.equal(response.status, 200);
+                assert.deepEqual(response.body,{message:`Cliente con id ${cid} eliminado`});
+            } catch (error) {
+                throw error;
+            }
+        });
+    });
+    describe('DELETE /car-rental-online/api/empleados/:eid', function() {
+        it('Debe borrar el empleado con id=eid', async () => {
+            try {
+                let eid='3';
+                const response = await chai.request(app).delete(`/car-rental-online/api/empleados/${eid}`);
+
+                assert.equal(response.status, 200);
+                assert.deepEqual(response.body,{message:`Empleado con id ${eid} eliminado`});
+            } catch (error) {
+                throw error;
+            }
+        });
+    });
+    it(`GET ${URL}/car-rental-online/api/clientes?email=`, async () => {
+
+        try {
+            const response = await chai.request(URL).get('/car-rental-online/api/clientes?email=email1').send();
+
+            assert.equal(response.status, 200);
+            assert.deepEqual(response.body,[{"id":"2",
+            "dni": "1234",
+            "nombres": "nombre1",
+            "apellidos": "apellidos1",
+            "direccion": "direccion1",
+            "email": "email1",
+            "password": "password1",
+            "telefono": "telefono1",
+            "rol": "Cliente"}]);
+
+        } catch (error) {
             throw error;
-
         }
-        
 
-    })
+    });
+    it(`GET ${URL}/car-rental-online/api/empleados?email=`, async () => {
+
+        try {
+            const response = await chai.request(URL).get('/car-rental-online/api/empleados?email=email2').send();
+
+            assert.equal(response.status, 200);
+            assert.deepEqual(response.body,[{"id":"3",
+            "dni": "12345",
+            "nombres": "nombre2",
+            "apellidos": "apellidos2",
+            "direccion": "direccion2",
+            "email": "email2",
+            "password": "password2",
+            "telefono": "telefono2",
+            "rol": "Empleado"}]);
+
+        } catch (error) {
+            throw error;
+        }
+
+    });
+    it(`GET ${URL}/car-rental-online/api/clientes/:cid`, async () => {
+        let cid=2;
+
+        try {
+            const response = await chai.request(URL).get(`/car-rental-online/api/clientes/${cid}`).send();
+
+            assert.equal(response.status, 200);
+            assert.deepEqual(response.body,{"id":"2",
+            "dni": "1234",
+            "nombres": "nombre1",
+            "apellidos": "apellidos1",
+            "direccion": "direccion1",
+            "email": "email1",
+            "password": "password1",
+            "telefono": "telefono1",
+            "rol": "Cliente"});
+
+        } catch (error) {
+            throw error;
+        }
+
+    });
+    it(`GET ${URL}/car-rental-online/api/empleados/:eid`, async () => {
+        let eid=3;
+
+        try {
+            const response = await chai.request(URL).get(`/car-rental-online/api/empleados/${eid}`).send();
+
+            assert.equal(response.status, 200);
+            assert.deepEqual(response.body,{"id":"3",
+            "dni": "12345",
+            "nombres": "nombre2",
+            "apellidos": "apellidos2",
+            "direccion": "direccion2",
+            "email": "email2",
+            "password": "password2",
+            "telefono": "telefono2",
+            "rol": "Empleado"});
+
+        } catch (error) {
+            throw error;
+        }
+
+    });
+    it(`POST ${URL}/car-rental-online/api/signin`, async () => {
+        try {
+            let user = {
+                email: "email1",
+                password: "password1",
+                rol: "Cliente"
+            };
+    
+            let response = await chai.request(URL).post(`/car-rental-online/api/signin`).send(user);
+    
+        
+            assert.equal(response.status, 200);
+    
+            
+
+            assert.equal(response.body.email, user.email);
+            assert.equal(response.body.rol, user.rol);
+            
+    
+        } catch (error) {
+            throw error;
+        }
+    });
+    it(`POST ${URL}/car-rental-online/api/signup`, async () => {
+        try {
+            let user = {
+                id: "2",
+                dni: "12345",
+                nombres: "nombre1",
+                apellidos: "apellidos1",
+                direccion: "direccion1",
+                email: "email2",
+                password: "password1",
+                telefono: "telefono1",
+                rol: "Cliente"
+            };
+    
+            let response = await chai.request(URL).post(`/car-rental-online/api/signup`).send(user);
+    
+            
+            assert.equal(response.status, 200);
+            assert.isArray(response.body);
+            assert.lengthOf(response.body, 2);
+           
+            
+        } catch (error) {
+            throw error;
+        }
+    });
+    describe('PUT /car-rental-online/api/usuarios/:uid', function() {
+        it('Debería actualizar el perfil de un usuario existente', async () => {
+            const usuarioExistente = {
+                id: "2",
+                dni: "12345",
+                nombres: "nombre1",
+                apellidos: "apellidos1",
+                direccion: "direccion1",
+                email: "email2",
+                password: "password1",
+                telefono: "telefono1",
+                rol: "Cliente"
+            };
+    
+            const perfilActualizado = {
+                
+                nombres: "Paco",
+                apellidos: "apellidos1",
+                direccion: "direccion1",
+                email: "email2",
+                password: "password1",
+                telefono: "telefono1",
+                
+            };
+    
+            
+            const response = await request(app)
+                .put(`/car-rental-online/api/usuarios/${usuarioExistente.id}`)
+                .send(perfilActualizado);
+    
+            
+                assert.equal(response.status, 200);
+            chai.expect(response.body).toEqual(usuarioExistente); 
+        });
+    
+        it('Debería devolver un error si el usuario no existe', async () => {
+            const usuarioNoExistenteId = '1000'; 
+    
+            
+            const response = await request(app)
+                .put(`/car-rental-online/api/usuarios/${usuarioNoExistenteId}`)
+                .send({ 
+                nombres: "Paco",
+                apellidos: "apellidos1",
+                direccion: "direccion1",
+                email: "email2",
+                password: "password1",
+                telefono: "telefono1",
+                });
+    
+           
+                assert.equal(response.status, 404);
+            
+            chai.expect(response.body).toEqual({ message: `Usuario con id ${usuarioNoExistenteId} no encontrado` });
+        });
+    });
     
 });

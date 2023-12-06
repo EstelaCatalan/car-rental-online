@@ -12,7 +12,8 @@ const fs = require('fs');
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
-const path = require('path')
+const path = require('path');
+const { error } = require('console');
 app.use('/car-rental-online', express.static(path.join(__dirname, 'public')))
 app.listen(port, () => {
     console.log(`Car Rental Online listening on port ${port}`)
@@ -64,28 +65,36 @@ app.put('/car-rental-online/api/empleados', (req, res) => {
 });
 app.delete('/car-rental-online/api/clientes/:cid', (req, res) => {
     let cid = req.params.cid;
+    
     let usuario = model.clienteById(cid);
+    
+    
     if (!usuario)
         res.status(404).json({
             message: `Usuario con id ${cid} no encontrado` });
     else {
-        model._clientes = model._clientes.filter(cliente => cliente.id !== cid);
-        res.status(200).json(usuario);
+        model._clientes = model._clientes.filter(cliente => cliente.id != cid);
+        res.json({ message: `Cliente con id ${cid} eliminado` });
+
     }
 
-})
+});
 app.delete('/car-rental-online/api/empleados/:eid', (req, res) => {
     let eid = req.params.eid;
+    
     let usuario = model.empleadoById(eid);
+    
+    
     if (!usuario)
         res.status(404).json({
             message: `Empleado con id ${eid} no encontrado` });
     else {
-        model._empleados = model._empleados.filter(empleado => empleado.id !== eid);
-        res.status(200).json(usuario);
+        model._empleados = model._empleados.filter(empleado => empleado.id != eid);
+        res.json({ message: `Empleado con id ${eid} eliminado` });
+
     }
 
-})
+});
 app.get('/car-rental-online/api/clientes?email=', (req,res)=>{
     let email= req.params.email;
     let usuario= model.clienteByEmail(email);
@@ -110,7 +119,7 @@ app.get('/car-rental-online/api/empleados?email=', (req,res)=>{
 })
 app.get('/car-rental-online/api/clientes/:cid', (req,res)=>{
     let id= req.params.cid;
-    let usuario= model.clienteByid(id);
+    let usuario= model.clienteById(id);
     if(!usuario)
         res.status(404).json({
             message:`Cliente con id ${id} no encontrado` 
@@ -121,7 +130,7 @@ app.get('/car-rental-online/api/clientes/:cid', (req,res)=>{
 })
 app.get('/car-rental-online/api/empleados/:eid', (req,res)=>{
     let id= req.params.eid;
-    let usuario= model.empleadoByid(id);
+    let usuario= model.empleadoById(id);
     if(!usuario)
         res.status(404).json({
             message:`Empleado con id ${id} no encontrado` 
@@ -130,32 +139,73 @@ app.get('/car-rental-online/api/empleados/:eid', (req,res)=>{
         res.status(200).json(usuario);
     }
 })
+
+
 app.post('/car-rental-online/api/signin',(req,res)=>{
-    let usuario=req.body;
-    model.signin(usuario);
-    res.status(200).json(usuario);
-})
+    const { email, password, rol } = req.body;
+    model.signin(email,password,rol);
+    res.status(200).json(model.usuario);
+ })
 app.post('/car-rental-online/api/signup',(req,res)=>{
     let usuario= req.body;
     model.signup(usuario);
-    res.status(200).json(usuario);
-})
-app.put('/car-rental-online/api/usuarios/:uid',(req,res)=>{
-    let uid= req.params.uid;
-    let usuario=model.empleadoById(uid);
-    if(usuario){
-        model.setPerfil(usuario);
-        res.status(200).json(usuario);
-    }else{
-        let usuario=model.clienteById(uid);
-        model.setPerfil(usuario);
-        res.status(200).json(usuario);
+    if(usuario.rol="Cliente"){
+    res.status(200).json(model._clientes);}
+    else{
+        res.status(200).json(model._empleados); 
     }
-    res.status(404).json({
-        message:`Usuario con id ${id} no encontrado` 
-});
-    
 })
+app.put('/car-rental-online/api/usuarios/:uid', (req, res) => {
+    const uid = req.params.uid;
+    const perfil = req.body;
+
+    let usuarioEncontrado = null;
+
+    try {
+        // Intentar buscar al usuario como empleado
+        try {
+            usuarioEncontrado = model.empleadoById(uid);
+        } catch (error) {
+            console.error("Error al buscar empleado:", error.message);
+        }
+
+        // Si no se encuentra como empleado, buscar en la lista de clientes
+        if (!usuarioEncontrado) {
+            usuarioEncontrado = model.clienteById(uid);
+        }
+
+        if (usuarioEncontrado) {
+            try {
+                const updated = model.setPerfil(perfil);
+
+                if (updated) {
+                    res.status(200).json(usuarioEncontrado);
+                } else {
+                    res.status(400).json({
+                        message: "Las contraseñas no coinciden"
+                    });
+                }
+            } catch (error) {
+                res.status(500).json({
+                    message: error.message
+                });
+            }
+        } else {
+            res.status(404).json({
+                message: `Usuario con id ${uid} no encontrado`
+            });
+        }
+    } catch (error) {
+        console.error("Error al buscar usuario:", error.message);
+        res.status(500).json({
+            message: "Error interno al buscar usuario"
+        });
+    }
+});
+            
+
+
+
 app.get('/car-rental-online/api/clientes/:cid/reservas',(req,res)=>{
     let cid= req.params.cid;
     let reservas=model.reservasByClienteId(cid);

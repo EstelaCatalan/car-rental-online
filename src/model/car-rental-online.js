@@ -373,11 +373,11 @@ class CarRentalOnline {
 		
 		const usuarioEncontrado = this._clientes.find(cliente => perfil.dni === cliente.dni );
 		if(usuarioEncontrado){
-			if(perfil.contrasena==perfil.contrasenaRepetida){
+			if(usuarioEncontrado.password==perfil.password){
 			usuarioEncontrado.nombres=perfil.nombres;
 			usuarioEncontrado.apellidos=perfil.apellidos;
 			usuarioEncontrado.telefono=perfil.telefono;
-			usuarioEncontrado.password=perfil.contrasena;
+		
 
 			return true;}
 			throw new Error("Las contraseñas no coinciden");
