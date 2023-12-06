@@ -134,3 +134,30 @@ app.post('/car-rental-online/api/signin',(req,res)=>{
     model.signin(usuario);
     res.status(200).json(usuario);
 })
+app.post('/car-rental-online/api/signup',(req,res)=>{
+    let usuario= req.body;
+    model.signup(usuario);
+    res.status(200).json(usuario);
+})
+app.put('/car-rental-online/api/usuarios/:uid',(req,res)=>{
+    let uid= req.params.uid;
+    let usuario=model.empleadoById(uid);
+    if(usuario){
+        model.setPerfil(usuario);
+        res.status(200).json(usuario);
+    }else{
+        let usuario=model.clienteById(uid);
+        model.setPerfil(usuario);
+        res.status(200).json(usuario);
+    }
+    res.status(404).json({
+        message:`Usuario con id ${id} no encontrado` 
+});
+    
+})
+app.get('/car-rental-online/api/clientes/:cid/reservas',(req,res)=>{
+    let cid= req.params.cid;
+    let reservas=model.reservasByClienteId(cid);
+    res.status(200).json(reservas);
+
+})
