@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node .",
     "test-model": ".\\node_modules\\.bin\\mocha .\\test\\model\\**\\*.js --reporter spec",
-    "test-rest": ".\\node_modules\\.bin\\mocha.\\test\\rest\\**\\*.js --reporter spec"
+    "test-rest": ".\\node_modules\\.bin\\mocha .\\test\\rest\\**\\*.js --reporter spec"
   },
   "keywords": [],
   "author": "",

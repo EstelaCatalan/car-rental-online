@@ -1,7 +1,8 @@
 const chai = require('chai');
 const supertest = require('supertest');
-const app = require('../app.js'); 
-const CarRentalOnline = require("../src/model/car-rental-online");
+const app = require('../../app');
+const CarRentalOnline = require("../../src/model/car-rental-online");
+
 
 chai.use(supertest);
 
@@ -16,7 +17,7 @@ describe('DELETE /car-rental-online/api/vehiculos/:id', () => {
         carRental = new CarRentalOnline();
 
    
-        const vehiculo = new Vehiculo('123', 'ABC123', 'Toyota', 'Camry', 'Sedán', 'Automóvil', true, false, 50, 'Vehículo de prueba');
+        const vehiculo = new Vehiculo('123', 'ABC123', 'Toyota', 'Camry', 'Sedï¿½n', 'Automï¿½vil', true, false, 50, 'Vehï¿½culo de prueba');
         carRental.agregarVehiculo(vehiculo);
 
         vehiculoId = vehiculo._id;
@@ -26,12 +27,12 @@ describe('DELETE /car-rental-online/api/vehiculos/:id', () => {
         try {
             const response = await supertest(app).delete(`/car-rental-online/api/vehiculos/${vehiculoId}`);
 
-            chai.expect(response.status).to.equal(200, 'El código de estado debe ser 200');
+            chai.expect(response.status).to.equal(200, 'El cï¿½digo de estado debe ser 200');
 
             const vehiculoEliminado = new Vehiculo(response.body);
 
-            chai.expect(vehiculoEliminado._id).to.equal(vehiculoId, 'El vehículo eliminado no coincide con el esperado');
-            chai.expect(vehiculoEliminado.disponible).to.be.false, 'El vehículo eliminado debe estar marcado como no disponible';
+            chai.expect(vehiculoEliminado._id).to.equal(vehiculoId, 'El vehï¿½culo eliminado no coincide con el esperado');
+            chai.expect(vehiculoEliminado.disponible).to.be.false, 'El vehï¿½culo eliminado debe estar marcado como no disponible';
         } catch (error) {
             throw error;
         }
@@ -43,8 +44,8 @@ describe('DELETE /car-rental-online/api/vehiculos/:id', () => {
 
             const response = await supertest(app).delete(`/car-rental-online/api/vehiculos/${vehiculoNoExistenteId}`);
 
-            chai.expect(response.status).to.equal(404, 'El código de estado debe ser 404');
-            chai.expect(response.body).to.deep.equal({ error: 'Vehículo no encontrado' }, 'El mensaje de error no es el esperado');
+            chai.expect(response.status).to.equal(404, 'El cï¿½digo de estado debe ser 404');
+            chai.expect(response.body).to.deep.equal({ error: 'Vehï¿½culo no encontrado' }, 'El mensaje de error no es el esperado');
         } catch (error) {
             throw error;
         }
@@ -57,21 +58,21 @@ describe('GET /car-rental-online/api/vehiculos', () => {
         try {
             const response = await supertest(app).get('/car-rental-online/app.js');
 
-            chai.expect(response.status).to.equal(200, 'El código de estado debe ser 200');
+            chai.expect(response.status).to.equal(200, 'El cï¿½digo de estado debe ser 200');
 
             const vehiculos = response.body.map(vehiculoData => new CarRentalOnline.Vehiculo(vehiculoData));
 
-            chai.expect(vehiculos).to.deep.equal([], 'Las colecciones de vehículos no coinciden');
+            chai.expect(vehiculos).to.deep.equal([], 'Las colecciones de vehï¿½culos no coinciden');
 
         } catch (error) {
             throw error;
         }
     });
 });
-const Vehiculo = require("../src/model/vehiculo");
+const Vehiculo = require("../../src/model/vehiculo");
 
 describe('PUT /car-rental-online/api/vehiculos', () => {
-    it('debería actualizar la colección de vehículos', async () => {
+    it('deberï¿½a actualizar la colecciï¿½n de vehï¿½culos', async () => {
         try {
             const vehiculos = [
                 { matricula: 'ABC123', marca: 'Toyota', modelo: 'Camry' },
@@ -83,7 +84,7 @@ describe('PUT /car-rental-online/api/vehiculos', () => {
 
             const resultado = response.body;
 
-            chai.expect(response.status).to.equal(200, 'El código de estado debe ser 200');
+            chai.expect(response.status).to.equal(200, 'El cï¿½digo de estado debe ser 200');
 
             chai.expect(vehiculos.length).to.equal(resultado.length, 'La cantidad de objetos debe ser la misma');
 
@@ -91,12 +92,12 @@ describe('PUT /car-rental-online/api/vehiculos', () => {
 
             vehiculosTransformados.forEach(vehiculo => chai.expect(vehiculo._id).to.be.not.undefined, 'El _id debe estar definido');
 
-            chai.expect(vehiculos).to.deep.equal(vehiculosTransformados, 'Las colecciones de vehículos deben coincidir');
+            chai.expect(vehiculos).to.deep.equal(vehiculosTransformados, 'Las colecciones de vehï¿½culos deben coincidir');
 
             const getResponse = await supertest(app).get('/car-rental-online/api/vehiculos');
 
             const vehiculosObtenidos = getResponse.body.map(vehiculoData => new Vehiculo(vehiculoData));
-            chai.expect(vehiculosTransformados).to.deep.equal(vehiculosObtenidos, 'Los resultados deben coincidir con la colección de vehículos enviada');
+            chai.expect(vehiculosTransformados).to.deep.equal(vehiculosObtenidos, 'Los resultados deben coincidir con la colecciï¿½n de vehï¿½culos enviada');
         } catch (error) {
             throw error;
         }
