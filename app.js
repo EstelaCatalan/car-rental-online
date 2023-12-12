@@ -139,6 +139,21 @@ app.get('/car-rental-online/api/empleados/:eid', (req,res)=>{
         res.status(200).json(usuario);
     }
 })
+app.post('/car-rental-online/api/vehiculos', (req, res) => {
+    try {
+        const vehiculoData = req.body; // Obtener los datos del vehículo desde el cuerpo de la petición
+        const nuevoVehiculo = new CarRentalOnline.Vehiculo(vehiculoData); // Crear una instancia de la clase Vehiculo
+
+        // Invocar la función agregarVehiculo(vehiculo) del modelo
+        const vehiculoAgregado = model.agregarVehiculo(nuevoVehiculo);
+
+        // Generar una respuesta con el resultado de la llamada a la función agregarVehiculo(vehiculo)
+        res.status(201).json(vehiculoAgregado);
+    } catch (error) {
+        console.error('Error al procesar el pedido POST de vehículos:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor al agregar vehículo' });
+    }
+});
 
 
 app.post('/car-rental-online/api/signin',(req,res)=>{
@@ -283,6 +298,44 @@ app.put('/car-rental-online/api/vehiculos', (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor al actualizar vehículos' });
     }
 });
+app.get('/car-rental-online/api/vehiculos', (req, res) => {
+    try {
+        const matricula = req.query.matricula;
+
+        if (matricula) {
+            const vehiculo = model.vehiculoByMatricula(matricula);
+
+            if (vehiculo) {
+                res.status(200).json(vehiculo);
+            } else {
+                res.status(404).json({ error: 'Vehículo no encontrado' });
+            }
+        } else {
+            const vehiculos = model.getVehiculos();
+            res.status(200).json(vehiculos);
+        }
+    } catch (error) {
+        console.error('Error al procesar el pedido GET de vehículos:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor al obtener vehículos' });
+    }
+});
+
+app.get('/car-rental-online/api/vehiculos/:id', (req, res) => {
+    try {
+        const vehiculoId = req.params.id;
+        const vehiculo = model.vehiculoById(vehiculoId);
+
+        if (!vehiculo) {
+            res.status(404).json({ message: 'Vehículo no encontrado' });
+        } else {
+            res.status(200).json(vehiculo);
+        }
+    } catch (error) {
+        console.error('Error al procesar el pedido GET de vehículo por ID:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor al obtener vehículo por ID' });
+    }
+});
+
 app.get('/car-rental-online/api/reservas/:id', (req, res) => {
     try {
 
@@ -302,6 +355,25 @@ app.get('/car-rental-online/api/reservas/:id', (req, res) => {
         res.status(500).json({ error: 'Error al obtener la reserva' });
     }
 });
+app.delete('/car-rental-online/api/vehiculos/:id', (req, res) => {
+    try {
+        const vehiculoId = req.params.id; // Obtener el _id del vehículo desde la URL
+        const vehiculoEliminado = model.eliminarVehiculo(vehiculoId); // Llamar a la función eliminarVehiculo(vehiculoId) del modelo
+
+        // Generar una respuesta con el resultado de la llamada a la función eliminarVehiculo(vehiculoId)
+        res.status(200).json(vehiculoEliminado);
+    } catch (error) {
+        console.error('Error al procesar el pedido DELETE de vehículos:', error.message);
+
+        // Manejar las excepciones y comunicarlas al cliente
+        if (error instanceof Error && error.message.includes('no encontrado')) {
+            res.status(404).json({ error: 'Vehículo no encontrado' });
+        } else {
+            res.status(500).json({ error: 'Error interno del servidor al eliminar vehículo' });
+        }
+    }
+});
+
 app.delete('/car-rental-online/api/reservas', (req, res) => {
     try {
         const numeroReserva = req.query.numero;
