@@ -45,6 +45,49 @@ class CarRentalOnline {
 		}
 		else await this.handleError(response);
 	}
+	async getEmpleados() {
+		let response = await fetch(`${this.base}/empleados`);
+		if (response.ok) {
+			let empleados = await response.json();
+			empleados = empleados.map(u => {
+				let empleado = new Empleado();
+				Object.assign(empleado, u);
+				return empleado;
+			});
+			return empleados;
+		}
+		else await this.handleError(response);
+	}
+	async setEmpleados(empleados) {
+		let response = await fetch(`${this.base}/empleados`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(empleados),
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			resultado = resultado.map(u => {
+				let empleado = new Empleado();
+				Object.assign(empleado, u);
+				return empleado;
+			});
+			return resultado;
+		} else await this.handleError(response);
+	}
+	async clienteByEmail(email) {
+		let response = await fetch(`${this.base}/clientes?email=`,{
+			method:'GET',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(email),
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			let cliente = new Cliente();
+			Object.assign(cliente, resultado);
+			return cliente;
+		}
+		else await this.handleError(response);
+		}
 	setReservas(reservas) {
 		this._reservas.length = 0;
 		this._reservas.push(reservas);
