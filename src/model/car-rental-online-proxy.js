@@ -3,6 +3,7 @@ class CarRentalOnline {
 	_base
 	constructor(base) {
 		this._base = base;
+		this.usuario = null;
 	}
 	async handleError(response) {
 		let message = 'Error no definido';
@@ -75,8 +76,8 @@ class CarRentalOnline {
 		} else await this.handleError(response);
 	}
 	async clienteByEmail(email) {
-		let response = await fetch(`${this.base}/clientes?email=`,{
-			method:'GET',
+		let response = await fetch(`${this.base}/clientes?email=`, {
+			method: 'GET',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify(email),
 		});
@@ -86,8 +87,176 @@ class CarRentalOnline {
 			Object.assign(cliente, resultado);
 			return cliente;
 		}
-		else await this.handleError(response);
+		else
+			await this.handleError(response);
+	}
+	async empleadoByEmail(email) {
+		let response = await fetch(`${this.base}/empleados?email=`, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(email),
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			let empleado = new Empleado();
+			Object.assign(empleado, resultado);
+			return empleado;
 		}
+		else
+			await this.handleError(response);
+	}
+	async clienteById(id) {
+		let response = await fetch(`${this.base}/clientes/${id}`, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			let cliente = new Cliente();
+			Object.assign(cliente, resultado);
+			return cliente;
+		}
+		else
+			await this.handleError(response);
+	}
+	async empleadoById(id) {
+		let response = await fetch(`${this.base}/empleados/${id}`, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			let empleado = new Empleado();
+			Object.assign(empleado, resultado);
+			return empleado;
+		}
+		else
+			await this.handleError(response);
+	}
+	async signin(email, password, rol) {
+		try {
+			let response = await fetch(`${this.base}/api/signin`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify({ email, password, rol }),
+			});
+
+			if (response.ok) {
+				let resultado = await response.json();
+				let user;
+
+				if (rol === "Empleado") {
+					user = new Empleado();
+				} else if (rol === "Cliente") {
+					user = new Cliente();
+				}
+
+				Object.assign(user, resultado);
+
+				this.usuario = user;
+
+				return this.usuario;
+			} else {
+				await this.handleError(response);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+
+		}
+
+	}
+	async signup(obj) {
+		try {
+			let response = await fetch(`${this.base}/api/signup`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify(obj),
+			});
+
+			if (response.ok) {
+				let resultado = await response.json();
+				let user;
+
+				if (obj.rol === "Empleado") {
+					user = new Empleado();
+				} else if (obj.rol === "Cliente") {
+					user = new Cliente();
+				}
+
+				Object.assign(user, resultado);
+
+				this.usuario = user;
+
+				return this.usuario;
+			} else {
+				await this.handleError(response);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+
+		}
+	}
+	async perfil(){
+		try {
+			let response = await fetch(`${this.base}/usuarios/${uid}`, {
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			});
+	
+			if (response.ok) {
+				let resultado = await response.json();
+				let user;
+	
+				if (resultado.rol === "Empleado") {
+					user = new Empleado();
+				} else if (resultado.rol === "Cliente") {
+					user = new Cliente();
+				}
+	
+				if (user) {
+					Object.assign(user, resultado);
+					return user;
+				} 
+			} else {
+				await this.handleError(response);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+			
+		}
+	}
+	async setPerfil(){
+		try {
+			let response = await fetch(`${this.base}/usuarios/${uid}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body: JSON.stringify(obj),
+			});
+	
+			if (response.ok) {
+				let resultado = await response.json();
+				let user;
+	
+				if (this.usuario.rol === "Empleado") {
+					user = new Empleado();
+					Object.assign(user, resultado);
+				} else if (this.usuario.rol === "Cliente") {
+					user = new Cliente();
+					Object.assign(user, resultado);
+				}
+				return this.usuario
+	
+				
+			} else {
+				await this.handleError(response);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+			
+		}
+	}
 	setReservas(reservas) {
 		this._reservas.length = 0;
 		this._reservas.push(reservas);
