@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- incluir css para mocha, para mostrar los resultados -->
+<!-- https://cdnjs.com/libraries/mocha -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css"
+integrity="sha512-K2SeadvFVe9lYFodeleJaoA3p2Kna1reHWkNJ3GWMint1X7cXdU7oJpe2TTkRZ65DCWp2kyxM8RNnEPstlWr4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- incluir el código del framework mocha -->
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"
+integrity="sha512-jsP/sG70bnt0xNVJt+k9NxQqGYvRrLzWhI+46SSf7oNJeCwdzZlBvoyrAN0zhtVyolGcHNh/9fEgZppG2pH+eA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script> mocha.setup('bdd'); // configuración mínima
+</script>
+<!-- incluir chai -->
+<!-- https://cdnjs.com/libraries/chai -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.8/chai.min.js"
+integrity="sha512-kblxofM8P+Fiq83KsnzTlFoM9YNhBauLW5DtBqVBiE5iXy/+G2l051jKzUL1DdTjQ1WGxMyh6n3cO+dLfwxKaw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script> // chai tiene extensiones, hacemos assert global
+let assert = chai.assert;
+let expect = chai.expect;
+</script>
+<script type="text/javascript" src="../../model/usuario.js"></script>
+<script type="text/javascript" src="../../model/empleado.js"></script>
+<script type="text/javascript" src="../../model/cliente.js"></script>
+<script type="text/javascript" src="../../model/reserva.js"></script>
+<script type="text/javascript" src="../../model/vehiculo.js"></script>
+<script type="text/javascript" src="../../model/car-rental-online.js"></script>
+</head>
+<body>
+<script></script>
+<!-- el script con los tests (describe, it...) -->
+<script type="text/javascript" src="./../model/usuario.js"></script>
+<script type="text/javascript" src="./../model/cliente.js"></script>
+<script type="text/javascript" src="./../model/empleado.js"></script>
+<script type="text/javascript" src="./../model/reserva.js"></script>
+<script type="text/javascript" src="./../model/vehiculo.js"></script>
+<script type="text/javascript" src="./../model/car-rental-online.js"></script>
+<!-- el elemento con id="mocha" que contiene los resultados de los
+tests -->
+<div id="mocha"></div>
+<!-- ¡ejectuar los tests! -->
+<script> mocha.run(); </script>
+</body>
+</html>
