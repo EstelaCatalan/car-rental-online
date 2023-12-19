@@ -1,27 +1,27 @@
 class Usuario{
    _id;
-   _dni;
-   _nombres;
-   _apellidos;
-   _direccion;
-   _email;
-   _password;
-   _rol;
-   _telefono;
+   dni;
+   nombres;
+   apellidos;
+   direccion;
+   email;
+   password;
+   rol;
+   telefono;
 
-   get dni(){return this._dni;}
+   get dni(){return this.dni;}
    set dni(dni){this.dni=dni}
-   get nombres(){return this._nombres;}
-   set nombres(nombres){this._nombres=nombres;}
-   get apellidos(){return this._apellidos;}
-   set apellidos(apellidos){this._apellidos=apellidos;}
-   get direccion(){return this._direccion;}
-   set direccion(direccion){this._direccion=direccion;}
-   get email(){return this._email;}
-   set email(email){this._email=email;}
-   get password(){return this._password;}
-   set password(password){this._password=password;}
-   get rol(){return this._rol;}
+   get nombres(){return this.nombres;}
+   set nombres(nombres){this.nombres=nombres;}
+   get apellidos(){return this.apellidos;}
+   set apellidos(apellidos){this.apellidos=apellidos;}
+   get direccion(){return this.direccion;}
+   set direccion(direccion){this.direccion=direccion;}
+   get email(){return this.email;}
+   set email(email){this.email=email;}
+   get password(){return this.password;}
+   set password(password){this.password=password;}
+   get rol(){return this.rol;}
    set rol(rol){this._rol=rol;}
    get telefono(){return this._telefono;}
    set telefono(telefono){this._telefono=telefono;}

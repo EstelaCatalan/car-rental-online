@@ -1,5 +1,5 @@
-const Vehiculo = require("../../src/model/vehiculo");
-class CarRentalOnline {
+
+class CarRentalOnlineProxy {
 	_base
 	constructor(base) {
 		this._base = base;
@@ -18,25 +18,31 @@ class CarRentalOnline {
 		}
 	}
 	async setClientes(clientes) {
-		let response = await fetch(`${this.base}/clientes`, {
+		console.log(this._base);
+		let response = await fetch(`${this._base}/clientes`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body: JSON.stringify(clientes),
+			body:JSON.stringify(clientes),
 		});
 		if (response.ok) {
 			let resultado = await response.json();
 			resultado = resultado.map(u => {
 				let cliente = new Cliente();
 				Object.assign(cliente, u);
+				console.log(cliente);
 				return cliente;
 			});
+			
 			return resultado;
 		} else await this.handleError(response);
-	}
+	};
 	async getClientes() {
-		let response = await fetch(`${this.base}/clientes`);
+		
+		let response = await fetch(`${this._base}/clientes`)
+		
 		if (response.ok) {
 			let clientes = await response.json();
+			console.log("Clientes recibidos:", clientes);
 			clientes = clientes.map(u => {
 				let cliente = new Cliente();
 				Object.assign(cliente, u);
@@ -45,9 +51,9 @@ class CarRentalOnline {
 			return clientes;
 		}
 		else await this.handleError(response);
-	}
+	};
 	async getEmpleados() {
-		let response = await fetch(`${this.base}/empleados`);
+		let response = await fetch(`${this._base}/empleados`);
 		if (response.ok) {
 			let empleados = await response.json();
 			empleados = empleados.map(u => {
@@ -60,7 +66,7 @@ class CarRentalOnline {
 		else await this.handleError(response);
 	}
 	async setEmpleados(empleados) {
-		let response = await fetch(`${this.base}/empleados`, {
+		let response = await fetch(`${this._base}/empleados`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
 			body: JSON.stringify(empleados),
@@ -636,4 +642,3 @@ class CarRentalOnline {
 
 }
 
-module.exports = CarRentalOnline;

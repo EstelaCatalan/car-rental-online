@@ -39,6 +39,7 @@ class CarRentalOnline {
 				throw new Error(`Ya existe un cliente con ese DNI`);
 			}
 			const nuevoCliente = {
+				
 				dni: obj.dni,
 				nombres: obj.nombres,
 				apellidos: obj.apellidos,
