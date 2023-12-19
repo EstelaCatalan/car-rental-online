@@ -1,4 +1,4 @@
-const Vehiculo = require("./vehiculo");
+const Vehiculo = require("../../src/model/vehiculo");
 class CarRentalOnline {
 	_base
 	constructor(base) {
