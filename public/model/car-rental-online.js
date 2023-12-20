@@ -18,6 +18,7 @@ class CarRentalOnline {
 		return this.lastid;
 	}
 	getClientes() {
+		
 		return this._clientes;
 	}
 	getVehiculos() {

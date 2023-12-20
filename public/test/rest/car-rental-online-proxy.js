@@ -40,7 +40,8 @@ describe("car-rental-online-proxy", function () {
         rol: 'Cliente',
     }
     const usuario4 = {
-        dni: '123',
+        _id:'4',
+        dni: '1238',
         nombres: 'nombre1',
         apellidos: 'apellidos1',
         direccion: 'direccion1',
@@ -50,6 +51,7 @@ describe("car-rental-online-proxy", function () {
         rol: 'Empleado',
     }
     const usuario5 = {
+        _id:'5',
         dni: '1234',
         nombres: 'nombre2',
         apellidos: 'apellidos2',
@@ -60,6 +62,7 @@ describe("car-rental-online-proxy", function () {
         rol: 'Empleado',
     }
     const usuario6 = {
+        _id:'6',
         dni: '12345',
         nombres: 'nombre3',
         apellidos: 'apellidos3',
@@ -160,36 +163,34 @@ describe("car-rental-online-proxy", function () {
     });
     
     it("get/Set clientes", async function () {
-        // Crear una lista de usuarios
-    
-    
-        // Crear una lista de clientes esperados
+  
+
         const clientes = [usuario1, usuario2, usuario3];
     
-        // Utilizar el proxy para agregar clientes
-        const resultadoSetClientes = await carrentalonline.setClientes(clientes);
+        const resultadoSetClientes =  await carrentalonline.setClientes(clientes);
       
-    
-        // Obtener clientes utilizando el proxy
-        const clientesObtenidos = await carrentalonline.getClientes();
-       
-    
-        // Verificar que los clientes obtenidos sean iguales a los clientes esperados
+        
+        const clientesObtenidos =  await carrentalonline.getClientes();
+      
         assert.deepEqual(clientesObtenidos, clientes);
+        assert.deepEqual(resultadoSetClientes,clientes);
     });
  
 
 
-    it("get/set empleados", async function () {
+    it("get/Set Empleados", async function () {
+  
 
-        empleados.push(usuario4);
-        empleados.push(usuario5);
-        empleados.push(usuario6);
-        const resultado= await carrentalonline.setEmpleados([usuario4, usuario5, usuario6]);
-        const empleadosObtenidos = await carrentalonline.getEmpleados();
+        const empleados = [usuario4, usuario5, usuario6];
+    
+        const resultadoSetEmpleados =  await carrentalonline.setEmpleados(empleados);
+        
+        const empleadosObtenidos =  await carrentalonline.getEmpleados();
+       
+      
         assert.deepEqual(empleadosObtenidos, empleados);
-
-    })
+        assert.deepEqual(resultadoSetEmpleados,empleados);
+    });
     it("get vehiculos", function () {
         carrentalonline._vehiculos.push(vehiculo1);
         carrentalonline._vehiculos.push(vehiculo2);

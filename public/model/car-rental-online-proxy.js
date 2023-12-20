@@ -18,7 +18,7 @@ class CarRentalOnlineProxy {
 		}
 	}
 	async setClientes(clientes) {
-		console.log(this._base);
+		
 		let response = await fetch(`${this._base}/clientes`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -29,20 +29,20 @@ class CarRentalOnlineProxy {
 			resultado = resultado.map(u => {
 				let cliente = new Cliente();
 				Object.assign(cliente, u);
-				console.log(cliente);
+				
 				return cliente;
 			});
 			
 			return resultado;
 		} else await this.handleError(response);
-	};
+	}
 	async getClientes() {
-		
+	
 		let response = await fetch(`${this._base}/clientes`)
 		
 		if (response.ok) {
 			let clientes = await response.json();
-			console.log("Clientes recibidos:", clientes);
+			
 			clientes = clientes.map(u => {
 				let cliente = new Cliente();
 				Object.assign(cliente, u);
@@ -51,7 +51,7 @@ class CarRentalOnlineProxy {
 			return clientes;
 		}
 		else await this.handleError(response);
-	};
+	}
 	async getEmpleados() {
 		let response = await fetch(`${this._base}/empleados`);
 		if (response.ok) {
@@ -271,19 +271,15 @@ class CarRentalOnlineProxy {
 		this.lastid++;
 		return this.lastid;
 	}
-	getClientes() {
-		return this._clientes;
-	}
+	
+
 	getVehiculos() {
 		return this._vehiculos;
 	}
 	getReservas() {
 		return this._reservas;
 	}
-	getEmpleados() {
-		return this._empleados;
 
-	}
 	agregarCliente(obj) {
 		const dni = obj.dni;
 		const rol = obj.rol;
