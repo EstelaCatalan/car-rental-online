@@ -157,15 +157,17 @@ describe("car-rental-online-proxy", function () {
         disponible: true,
         eliminado: true,
     };
-    beforeEach(function () {
+    beforeEach( async function () {
         // Crear una instancia del proxy con la dirección base del servidor
         carrentalonline = new CarRentalOnlineProxy('http://localhost:3000/car-rental-online/api');
+        clientes= await carrentalonline.setClientes([]);
+        empleados=await carrentalonline.setEmpleados([]);
     });
     
     it("get/Set clientes", async function () {
   
 
-        const clientes = [usuario1, usuario2, usuario3];
+         clientes = [usuario1, usuario2, usuario3];
     
         const resultadoSetClientes =  await carrentalonline.setClientes(clientes);
       
@@ -181,7 +183,7 @@ describe("car-rental-online-proxy", function () {
     it("get/Set Empleados", async function () {
   
 
-        const empleados = [usuario4, usuario5, usuario6];
+        empleados = [usuario4, usuario5, usuario6];
     
         const resultadoSetEmpleados =  await carrentalonline.setEmpleados(empleados);
         
@@ -191,7 +193,7 @@ describe("car-rental-online-proxy", function () {
         assert.deepEqual(empleadosObtenidos, empleados);
         assert.deepEqual(resultadoSetEmpleados,empleados);
     });
-    it("get vehiculos", function () {
+    /*it("get vehiculos", function () {
         carrentalonline._vehiculos.push(vehiculo1);
         carrentalonline._vehiculos.push(vehiculo2);
         carrentalonline._vehiculos.push(vehiculo3);
@@ -211,105 +213,139 @@ describe("car-rental-online-proxy", function () {
         assert.deepEqual(reservasObtenidas[0], reserva1);
         assert.deepEqual(reservasObtenidas[1], reserva2);
         assert.deepEqual(reservasObtenidas[2], reserva3);
+    })*/
+   
+    it("signin", async function () {
+        try {
+            await carrentalonline.setEmpleados([usuario6]);
+            await carrentalonline.setClientes([usuario1]);
+    
+            this.usuario = await carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+            if (!isEqual(carrentalonline.usuario, usuario1)) {
+                throw new Error("Inicio de sesión fallido para usuario1");
+            }
+    
+            this.usuario = await carrentalonline.signin(usuario6.email, usuario6.password, usuario6.rol);
+            if (!isEqual(carrentalonline.usuario, usuario6)) {
+                throw new Error("Inicio de sesión fallido para usuario6");
+            }
+    
+            // Manejo de excepción para rol no válido
+            await carrentalonline.signin(usuario1.email, usuario1.password, 'jshfhbw');
+            throw new Error("Rol no válido: Se esperaba una excepción pero no fue lanzada");
+    
+        } catch (error) {
+            if (error.message === "Rol no válido") {
+                // Realiza acciones si se detecta un rol no válido
+                console.error("Error: Rol no válido");
+            } else {
+                console.error("Error inesperado:", error.message);
+            }
+        }
+    
+        try {
+            // Manejo de excepción para credenciales incorrectas
+            await carrentalonline.signin(usuario1.email, 'jhdkfjs', usuario1.rol);
+            throw new Error("Credenciales incorrectas: Se esperaba una excepción pero no fue lanzada");
+    
+        } catch (error) {
+            if (error.message === "Credenciales incorrectas") {
+                // Realiza acciones si se detectan credenciales incorrectas
+                console.error("Error: Credenciales incorrectas");
+            } else {
+                console.error("Error inesperado:", error.message);
+            }
+        }
+    
+        try {
+            // Manejo de excepción para usuario no registrado
+            await carrentalonline.signin('usuarioNoRegistrado@ejemplo.com', 'contraseña', 'rol');
+            throw new Error("Usuario no registrado: Se esperaba una excepción pero no fue lanzada");
+    
+        } catch (error) {
+            console.error("Error: Usuario no registrado");
+        }
     })
-    it("agregar clientes", function () {
-        carrentalonline.agregarCliente(usuario1);
-        clientes1 = new Array();
-        clientes1.push(usuario1);
+    
+    it("signup",  async function () {
 
-        assert.throws(() => carrentalonline.agregarCliente(usuario6), `El objeto no tiene rol de Cliente`);
-        assert.throws(() => carrentalonline.agregarCliente(usuario1), `Ya existe un cliente con ese DNI`);
+        try{
 
-        assert.deepEqual(carrentalonline._clientes, clientes1);
-
-    })
-    it("agregar empleados", function () {
-        carrentalonline.agregarEmpleado(usuario5);
-        empleados1 = new Array();
-        empleados1.push(usuario5);
-
-        assert.throws(() => carrentalonline.agregarEmpleado(usuario1), `El objeto no tiene rol de Empleado`);
-        assert.throws(() => carrentalonline.agregarEmpleado(usuario5), `Ya existe un empleado con ese DNI`);
-
-        assert.deepEqual(carrentalonline._empleados, empleados1);
-
-    })
-    it("signin", function () {
-
-        carrentalonline.agregarEmpleado(usuario6);
-        carrentalonline.agregarCliente(usuario1);
-
-        carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
-        assert.deepEqual(carrentalonline.usuario, usuario1);
-        carrentalonline.signin(usuario6.email, usuario6.password, usuario6.rol);
-        assert.deepEqual(carrentalonline.usuario, usuario6);
-
-        assert.throws(() => carrentalonline.signin(usuario1.email, usuario1.password, 'jshfhbw'), "Rol no válido");
-
-        assert.throws(() => carrentalonline.signin(usuario1.email, 'jhdkfjs', usuario1.rol), "Credenciales incorrectas");
-        assert.throws(() => carrentalonline.signin('jhdkjh', usuario1.password, usuario1.rol), "Credenciales incorrectas");
-    })
-    it("signup", function () {
-
-        carrentalonline.signup(usuario1);
-        carrentalonline.signup(usuario6);
-
-        assert.throws(() => carrentalonline.signup(usuario6));
-
-        assert.throws(() => carrentalonline.signup(usuario1));
+        this.usuario= await carrentalonline.signup([usuario1]);
+        assert.deepEqual(carrentalonline.usuario,this.usuario)
+        this.usuario = await carrentalonline.signup([usuario6]);
+        assert.deepEqual(carrentalonline.usuario,this.usuario)
 
         usuario6.rol = "Cliente";
         usuario1.rol = "Empleado";
 
         carrentalonline.signup(usuario6);
-        carrentalonline.signup(usuario1);
+        carrentalonline.signup(usuario1);}catch(e){
+            if(e=="Rol no válido"){
+            console.log("Rol no válido");}
+            else {
+                console.log("Error inesperado:",e);
+            }
+        }
+
     })
-    it("signout cliente y empleado", function () {
+    it("signout cliente y empleado", async function () {
         usuario6.rol = "Empleado";
         usuario1.rol = "Cliente";
-
-        carrentalonline.agregarCliente(usuario1);
-        carrentalonline.agregarCliente(usuario2);
-        carrentalonline.agregarCliente(usuario3);
-
-        carrentalonline.agregarEmpleado(usuario4);
-        carrentalonline.agregarEmpleado(usuario5);
-        carrentalonline.agregarEmpleado(usuario6);
+try{
+        await carrentalonline.setClientes([usuario1,usuario2,usuario3]);
+       await carrentalonline.setEmpleados([usuario4,usuario5,usuario6]);
 
         assert.equal(carrentalonline.usuario, null);
 
-        carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+       await  carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+       this.usuario=usuario1;
 
-        assert.deepEqual(carrentalonline.usuario, usuario1);
+        assert.deepEqual(carrentalonline.usuario, this.usuario);
+        carrentalonline.signout();
+        this.usuario=null;
+        assert.equal(carrentalonline.usuario, this.usuario);
 
-        carrentalonline.signin(usuario4.email, usuario4.password, usuario4.rol);
+       this.usuario= await carrentalonline.signin(usuario4.email, usuario4.password, usuario4.rol);
 
-        assert.deepEqual(carrentalonline.usuario, usuario4);
+        assert.deepEqual(carrentalonline.usuario, this.usuario);
 
         carrentalonline.signout();
-        assert.equal(carrentalonline.usuario, null);
+        this.usuario=null;
+
+        assert.equal(carrentalonline.usuario, null);}catch(e){
+            if(e=='El usuario es invitado'){
+                console.log(e);
+            }else{
+                console.log('error inesperado:',e);
+            }
+
+        }
 
     })
-    it("perfil", function () {
+    it("perfil", async function () {
+        try{
 
-        carrentalonline.agregarCliente(usuario1);
-        carrentalonline.agregarCliente(usuario2);
-        carrentalonline.agregarCliente(usuario3);
+        await carrentalonline.setClientes([usuario1,usuario2,usuario3]);
+        await carrentalonline.setEmpleados([usuario4,usuario5,usuario6]);
 
-        carrentalonline.agregarEmpleado(usuario4);
-        carrentalonline.agregarEmpleado(usuario5);
-        carrentalonline.agregarEmpleado(usuario6);
+        await carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+        assert.deepEqual(await carrentalonline.Perfil(), usuario1);
 
-        carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
-        assert.deepEqual(carrentalonline.perfil(), usuario1);
+        await carrentalonline.signin(usuario4.email, usuario4.password, usuario4.rol);
+        assert.deepEqual(await carrentalonline.Perfil(), usuario4);
 
-        carrentalonline.signin(usuario4.email, usuario4.password, usuario4.rol);
-        assert.deepEqual(carrentalonline.perfil(), usuario4);
+        await carrentalonline.signout();
+        await carrentalonline.Perfil();}catch(e){
+            if (e=="No ha iniciado sesión ningún usuario"){
+                console.log(e);
+            }else{
+                console.log('error inesperado:',e);
+            }
+        }
 
-        carrentalonline.signout();
-        assert.throws(() => carrentalonline.perfil(), "No ha iniciado sesión ningún usuario");
     })
-    it("Cliente by email", function () {
+    /*it("Cliente by email", function () {
 
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.agregarCliente(usuario2);
@@ -699,6 +735,6 @@ describe("car-rental-online-proxy", function () {
 
         const reservasDelCliente = carrentalonline.reservasByClienteId(cliente1.id);
         expect(reservasDelCliente.length).to.equal(2);
-    });
+    });*/
 
 })

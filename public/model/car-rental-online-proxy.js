@@ -143,7 +143,9 @@ class CarRentalOnlineProxy {
 	}
 	async signin(email, password, rol) {
 		try {
-			let response = await fetch(`${this.base}/api/signin`, {
+			
+			
+			let response = await fetch(`${this._base}/signin`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				body: JSON.stringify({ email, password, rol }),
@@ -175,7 +177,7 @@ class CarRentalOnlineProxy {
 	}
 	async signup(obj) {
 		try {
-			let response = await fetch(`${this.base}/api/signup`, {
+			let response = await fetch(`${this._base}/signup`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json;charset=utf-8' },
 				body: JSON.stringify(obj),
@@ -261,6 +263,13 @@ class CarRentalOnlineProxy {
 		} catch (error) {
 			console.error("Error:", error);
 			
+		}
+	}
+	async signout() {
+		if (this.usuario.rol=='Cliente'||this.usuario=='Empleado'){
+		this.usuario = null;}
+		else{
+			throw new Error('El usuario es invitado');
 		}
 	}
 	setReservas(reservas) {
@@ -415,51 +424,9 @@ class CarRentalOnlineProxy {
 		return vehiculoEncontrado || null;
 	}
 
-	signin(email, password, rol) {
-
-		let usuarioEncontrado = null;
-		if (rol === "Empleado") {
-			usuarioEncontrado = this._empleados.find(empleado => empleado.email === email && empleado.password === password);
-		} else if (rol === "Cliente") {
-
-
-			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email && cliente.password === password);
-
-		} else {
-			throw new Error("Rol no válido");
-		}
-
-		if (usuarioEncontrado) {
-			this.usuario = usuarioEncontrado;
-		} else {
-			throw new Error("Credenciales incorrectas");
-		}
-	}
-	signup(obj) {
-
-		if (obj.rol === "Empleado") {
-			const empleadoExistente = this._empleados.find(empleado => empleado.email === obj.email);
-			if (empleadoExistente) {
-				throw new Error("El email ya está registrado como empleado");
-			}
-		} else if (obj.rol === "Cliente") {
-			const clienteExistente = this._clientes.find(cliente => cliente.email === obj.email);
-			if (clienteExistente) {
-				throw new Error("El email ya está registrado como cliente");
-			}
-		} else {
-			throw new Error("Rol no válido");
-		}
-		if (obj.rol === "Empleado") {
-			this._empleados.push(obj);
-		} else if (obj.rol === "Cliente") {
-			this._clientes.push(obj);
-		}
-	}
-	signout() {
-		this.usuario = null;
-	}
-	perfil() {
+	
+	
+	async perfil() {
 		if (this.usuario != null) {
 			return this.usuario
 		} else {
