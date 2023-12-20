@@ -23,7 +23,7 @@ describe("empleado", function () {
     });
     it("constructor empleado", function () {
         assert.equal(empleado._id,id);
-        assert.equal(empleado._rol,rol)
+        assert.equal(empleado.rol,rol)
     });
     it("getter nombres",function(){
         assert.equal(empleado._nombres,nombres);
@@ -86,7 +86,7 @@ describe("empleado", function () {
 
     });
     it("getter rol",function(){
-        assert.equal(empleado._rol,rol);
+        assert.equal(empleado.rol,rol);
 
     });
     it("setter rol",function(){
