@@ -272,10 +272,25 @@ class CarRentalOnlineProxy {
 			throw new Error('El usuario es invitado');
 		}
 	}
-	setReservas(reservas) {
-		this._reservas.length = 0;
-		this._reservas.push(reservas);
+
+	async setReservas(reservas) {
+		let response = await fetch(`${this._base}/reservas`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(reservas),
+		});
+		if (response.ok) {
+			let resultado = await response.json();
+			resultado = resultado.map(u => {
+				let reserva = new Reserva(u._id); 
+				Object.assign(reserva, u);
+				
+				return reserva;
+			});
+			return resultado;
+		} else await this.handleError(response);
 	}
+	
 	genId() {
 		this.lastid++;
 		return this.lastid;
@@ -285,8 +300,19 @@ class CarRentalOnlineProxy {
 	getVehiculos() {
 		return this._vehiculos;
 	}
-	getReservas() {
-		return this._reservas;
+
+	async getReservas() {
+		let response = await fetch(`${this._base}/reservas`);
+		if (response.ok) {
+			let reservas = await response.json();
+			reservas = reservas.map(u => {
+				let reserva = new Reserva();
+				Object.assign(reserva, u);
+				return reserva;
+			});
+			return reservas;
+		}
+		else await this.handleError(response);
 	}
 
 	agregarCliente(obj) {

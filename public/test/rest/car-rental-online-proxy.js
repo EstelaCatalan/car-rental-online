@@ -1,11 +1,14 @@
 describe("car-rental-online-proxy", function () {
     let carrentalonline;
+
     let vehiculos = new Array();
     let clientes = new Array();
     let empleados = new Array();
+    let reservas = new Array();
+
     let lastid = 0;
     let usuario = null;
-    let reservas = new Array();
+
     const usuario1 = {
         _id: '1',
         dni: '123',
@@ -162,6 +165,7 @@ describe("car-rental-online-proxy", function () {
         carrentalonline = new CarRentalOnlineProxy('http://localhost:3000/car-rental-online/api');
         clientes= await carrentalonline.setClientes([]);
         empleados=await carrentalonline.setEmpleados([]);
+        reservas=await carrentalonline.setReservas([]);
     });
     
     it("get/Set clientes", async function () {
@@ -193,7 +197,7 @@ describe("car-rental-online-proxy", function () {
         assert.deepEqual(empleadosObtenidos, empleados);
         assert.deepEqual(resultadoSetEmpleados,empleados);
     });
-    /*it("get vehiculos", function () {
+    it("get vehiculos", function () {
         carrentalonline._vehiculos.push(vehiculo1);
         carrentalonline._vehiculos.push(vehiculo2);
         carrentalonline._vehiculos.push(vehiculo3);
@@ -202,19 +206,7 @@ describe("car-rental-online-proxy", function () {
 
         assert.deepEqual(carrentalonline._vehiculos, vehiculos)
     })
-    it("get reservas", function () {
-        carrentalonline._reservas.push(reserva1);
-        carrentalonline._reservas.push(reserva2);
-        carrentalonline._reservas.push(reserva3);
 
-        const reservasObtenidas = carrentalonline.getReservas();
-
-        assert.equal(reservasObtenidas.length, 3);
-        assert.deepEqual(reservasObtenidas[0], reserva1);
-        assert.deepEqual(reservasObtenidas[1], reserva2);
-        assert.deepEqual(reservasObtenidas[2], reserva3);
-    })*/
-   
     it("signin", async function () {
         try {
             await carrentalonline.setEmpleados([usuario6]);
@@ -345,6 +337,88 @@ try{
         }
 
     })
+
+    it("get/Set reservas", async function () {
+        const reservas = [reserva1, reserva2, reserva3];
+    
+        const reservasConfiguradas = await carrentalonline.setReservas(reservas);
+        const reservasObtenidas = await carrentalonline.getReservas();
+    
+        assert.deepEqual(reservasObtenidas, reservasConfiguradas, "Las reservas get y set tienen que coincidir");
+    });
+
+    
+    it("disponibilidad", async function() {
+        try {
+            await carrentalonline.setVehiculos([vehiculo1]);
+            await carrentalonline.setReservas([reserva1]);
+          
+    
+            let disponibilidad = await carrentalonline.disponibilidad(vehiculo.id, new Date("2023-12-10"), new Date("2023-12-30"));
+            if (!disponibilidad) {
+                throw new Error("El vehículo debería estar disponible");
+            }
+    
+            disponibilidad = await carrentalonline.disponibilidad(vehiculo.id, reserva1.inicio, reserva1.fin);
+            if (disponibilidad) {
+                throw new Error("El vehículo no debería estar disponible");
+            }
+    
+            try {
+                await carrentalonline.disponibilidad("noexisto", new Date("2023-02-01"), new Date("2023-02-05"));
+                throw new Error("Se esperaba un error para un vehículo inexistente");
+            } catch (error) {
+                console.error(error.message); 
+            }
+    
+        } catch (error) {
+            console.error(error.message);
+        }
+    });
+    
+    it("reservar", async function() {
+        try {
+           
+            await carrentalonline.setClientes([usuario1]);
+            await carrentalonline.setVehiculos([vehiculo]);
+    
+            await carrentalonline.signin(usuario1.email, usuario1.password, usuario1.rol);
+    
+            let reservaValida = {
+                inicio: new Date("2023-01-01"),
+                fin: new Date("2023-01-05"),
+                fecha: new Date("2022-12-30"),
+                vehiculoId: vehiculo.id
+              
+            };
+    
+            let resultado = await carrentalonline.reservar(reservaValida);
+            if (!resultado) {
+                throw new Error("Reserva fallida");
+            }
+        let reservaFechasmal = {
+            inicio: new Date("2023-01-05"),
+            fin: new Date("2023-01-01"),
+            fecha: new Date("2022-12-30"),
+            vehiculoId: vehiculo.id
+        };
+
+        try {
+            await carrentalonline.reservar(reservaFechasmal);
+            throw new Error("Se esperaba un error por fechas inválidas");
+        } catch (error) {
+            console.error(error.message);
+        }   
+           
+        } catch (error) {
+            console.error(error.message);
+         
+        }
+
+    });
+
+
+    
     /*it("Cliente by email", function () {
 
         carrentalonline.agregarCliente(usuario1);
