@@ -1,5 +1,4 @@
 
-
 const port = 3000;
 const express = require('express')
 const app = express();
@@ -155,6 +154,23 @@ app.post('/car-rental-online/api/vehiculos', (req, res) => {
     }
 });
 
+app.post('/car-rental-online/api/reservas', (req, res) => {
+    //serializo un objeto reserva
+    try {
+        const reserva = {
+            vehiculoId: req.body.vehiculoId,
+            clienteId: req.body.clienteId,
+            inicio: req.body.inicio,
+            fin: req.body.fin
+        };
+
+        const resultado = model.reservar(reserva);
+        res.status(200).json(resultado);
+    } catch (error) {
+        console.error('Error en la reserva:', error.message);
+        res.status(500).json({ error: 'Error' });
+    }
+});
 
 app.post('/car-rental-online/api/signin',(req,res)=>{
     const { email, password, rol } = req.body;
@@ -219,8 +235,6 @@ app.put('/car-rental-online/api/usuarios/:uid', (req, res) => {
 });
             
 
-
-
 app.get('/car-rental-online/api/clientes/:cid/reservas',(req,res)=>{
     let cid= req.params.cid;
     let reservas=model.reservasByClienteId(cid);
@@ -267,6 +281,22 @@ app.put('/car-rental-online/api/vehiculos', (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor al actualizar vehículos' });
     }
 });
+
+app.delete('/car-rental-online/api/reservas', (req, res) => {
+    const numeroReserva = req.query.numero;
+    if (!numeroReserva) {
+        return res.status(400).json({ error: 'Necesitas especificar el número de reserva' });
+    }
+
+    try {
+        const resultado = model.cancelar(numeroReserva);
+        res.status(200).json({ mensaje: 'Reserva cancelada', resultado });
+    } catch (error) {
+        console.error('Error al cancelar la reserva:', error.message);
+        res.status(500).json({ error: 'Error' });
+    }
+});
+
 app.put('/car-rental-online/api/reservas', (req, res) => {
     try {
         const nuevasReservas = req.body;
@@ -320,6 +350,21 @@ app.get('/car-rental-online/api/vehiculos', (req, res) => {
     }
 });
 
+app.post('/car-rental-online/api/reservas/entregar', (req, res) => {
+    const numeroReserva = req.query.numero;
+    if (!numeroReserva) {
+        return res.status(400).json({ error: 'Número de reserva requerido' });
+    }
+
+    try {
+        const resultado = model.entregarVehiculo(numeroReserva);
+        res.status(200).json({ mensaje: 'Vehículo entregado con éxito', resultado });
+    } catch (error) {
+        console.error('Error al entregar el vehículo:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
 app.get('/car-rental-online/api/vehiculos/:id', (req, res) => {
     try {
         const vehiculoId = req.params.id;
@@ -355,6 +400,8 @@ app.get('/car-rental-online/api/reservas/:id', (req, res) => {
         res.status(500).json({ error: 'Error al obtener la reserva' });
     }
 });
+
+
 app.delete('/car-rental-online/api/vehiculos/:id', (req, res) => {
     try {
         const vehiculoId = req.params.id; // Obtener el _id del vehículo desde la URL
@@ -373,6 +420,63 @@ app.delete('/car-rental-online/api/vehiculos/:id', (req, res) => {
         }
     }
 });
+
+app.post('/car-rental-online/api/vehiculos/:id/revisar', (req, res) => {
+    const vehiculoId = req.params.id;
+
+    try {
+        const vehiculo = model.vehiculoById(vehiculoId);
+        if (!vehiculo) {
+            return res.status(404).json({ error: 'Vehículo no encontrado' });
+        }
+
+        vehiculo.disponible = !vehiculo.disponible;
+
+        res.status(200).json({ mensaje: 'Vehículo revisado con éxito', vehiculo });
+    } catch (error) {
+        console.error('Error al revisar el vehículo:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+app.get('/car-rental-online/api/reservas', (req, res) => {
+    const numeroReserva = req.query.numero;
+
+    if (numeroReserva) {
+        try {
+         
+            const resultado = model.reservaByNumero(numeroReserva);
+            if (resultado) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(404).json({ error: 'Reserva no encontrada' });
+            }
+        } catch (error) {
+            console.error('Error al obtener la reserva:', error.message);
+            res.status(500).json({ error: 'Error interno del servidor' });
+        }
+    } else {
+        res.status(404).json({ error: 'Especifique un número' });
+    }
+});
+
+app.get('/car-rental-online/api/vehiculos/:id/disponibilidad', (req, res) => {
+    const vehiculoId = req.params.id;
+    const { inicio, fin } = req.query;
+
+    if (!inicio || !fin) {
+        return res.status(400).json({ error: 'Las fechas de inicio y fin son necesarias' });
+    }
+
+    try {
+        const disponibilidad = model.disponibilidad(vehiculoId, inicio, fin);
+        res.status(200).json({ disponibilidad });
+    } catch (error) {
+        console.error('Error al verificar la disponibilidad:', error.message);
+        res.status(500).json({ error: 'Error' });
+    }
+});
+
 
 app.delete('/car-rental-online/api/reservas', (req, res) => {
     try {
