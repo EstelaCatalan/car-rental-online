@@ -1,63 +1,30 @@
+const Cliente= require ('./cliente') ;
+const Empleado= require ('./empleado') ;
 class CarRentalOnline {
-	_vehiculos
-	_clientes
-	_empleados
-	lastid
-	usuario
-	_reservas
+	
 	constructor() {
-		this._vehiculos = new Array();
-		this._clientes = new Array();
-		this._empleados = new Array();
-		this._reservas = new Array();
-		this.lastid = 0;
-		this.usuario = null;
+	
 	}
 	genId() {
 		this.lastid++;
 		return this.lastid;
 	}
-	getClientes() {
-		
-		return this._clientes;
-	}
+	async getClientes() { return (await Cliente.find()).map(d => d.toObject()); }
 	getVehiculos() {
 		return this._vehiculos;
 	}
 	getReservas() {
 		return this._reservas;
 	}
-	getEmpleados() {
-		return this._empleados;
+	async getEmpleados() { return (await Empleado.find()).map(d => d.toObject()); }
+	async setClientes(clientes) { return (await Promise.all(clientes.map(async u => { return new Cliente(u).save(); }))).map(d =>d.toObject());}
+	async setEmpleados(empleados) { return (await Promise.all(empleados.map(async u => { return new Empleado(u).save(); }))).map(d =>d.toObject());}
+	async agregarCliente(cliente) { return (await new Cliente(cliente).save()).toObject(); }
+	async agregarEmpleado(empleado) { return (await new Empleado(empleado).save()).toObject(); }
+	async clienteById(uid) {return (await Cliente.findById(uid)).toObject();}
+	async empleadoById(uid) {return (await Empleado.findById(uid)).toObject();}
 
-	}
-	agregarCliente(obj) {
-		const dni = obj.dni;
-		const rol = obj.rol;
-		const clienteExiste = this._clientes.find(cliente => cliente.dni === dni);
-		if (rol == 'Cliente') {
-			if (clienteExiste) {
-				throw new Error(`Ya existe un cliente con ese DNI`);
-			}
-			const nuevoCliente = {
-				
-				dni: obj.dni,
-				nombres: obj.nombres,
-				apellidos: obj.apellidos,
-				direccion: obj.direccion,
-				email: obj.email,
-				password: obj.password,
-				telefono: obj.telefono,
-				rol: obj.rol,
-			};
 
-			this._clientes.push(nuevoCliente);
-		} else {
-			throw new Error(`El objeto no tiene rol de Cliente`);
-		}
-		
-
-	}
 
 	agregarVehiculo(obj) {
 		const matricula = obj.matricula;
@@ -81,31 +48,7 @@ class CarRentalOnline {
 		this._vehiculos.push(nuevoVehiculo);
 	}
 
-	agregarEmpleado(obj) {
-		const dni = obj.dni;
-		const rol = obj.rol;
-		const empleadoExiste = this._empleados.find(empleado => empleado.dni === dni);
-		if (rol == 'Empleado') {
-			if (empleadoExiste) {
-				throw new Error(`Ya existe un empleado con ese DNI`);
-			}
-			const nuevoEmpleado = {
-				dni: obj.dni,
-				nombres: obj.nombres,
-				apellidos: obj.apellidos,
-				direccion: obj.direccion,
-				email: obj.email,
-				password: obj.password,
-				telefono: obj.telefono,
-				rol: obj.rol,
-			};
 
-			this._empleados.push(nuevoEmpleado);
-		} else {
-			throw new Error(`El objeto no tiene rol de Empleado`);
-		}
-
-	}
 
 	eliminarVehiculo(vehiculoId) {
 		const vehiculoIndex = this._vehiculos.findIndex(vehiculo => vehiculo.id === vehiculoId);
