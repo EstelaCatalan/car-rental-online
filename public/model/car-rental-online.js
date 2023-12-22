@@ -185,22 +185,8 @@ class CarRentalOnline {
 			throw new Error("El empleado con ese email no existe");
 		}
 	}
-	clienteById(id) {
-		let cliente = this._clientes.find(cliente => cliente.id === id);
-		if (cliente) {
-			return cliente
-		} else {
-			throw new Error("El cliente con ese id no existe")
-		}
-	}
-	empleadoById(id) {
-		let empleado = this._empleados.find(empleado => empleado.id === id);
-		if (empleado) {
-			return empleado
-		} else {
-			throw new Error("El empleado con ese id no existe")
-		}
-	}
+	async clienteById(uid) {return (await Cliente.findById(uid)).toObject();}
+	async empleadoById(uid) {return (await Empleado.findById(uid)).toObject();}
 	disponibilidad(vehiculoId, inicio, fin) {
 
 		const vehiculo = this._vehiculos.find(v => v.id === vehiculoId);
