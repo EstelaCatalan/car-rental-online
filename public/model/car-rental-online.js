@@ -1,5 +1,6 @@
 const Cliente= require ('./cliente') ;
 const Empleado= require ('./empleado') ;
+const reserva = require('./reserva');
 class CarRentalOnline {
 	
 	constructor() {
@@ -10,12 +11,21 @@ class CarRentalOnline {
 		return this.lastid;
 	}
 	async getClientes() { return (await Cliente.find()).map(d => d.toObject()); }
-	getVehiculos() {
-		return this._vehiculos;
-	}
-	getReservas() {
-		return this._reservas;
-	}
+
+	async getReservas() {   const reservas = await Reserva.find()
+		.populate(['cliente', 'vehiculo'])
+		.exec();
+	return reservas.map(reserva => reserva.toObject());}
+
+	async setReservas(usuarios) { 
+		await Reserva.deleteMany({});
+
+		return (await Promise.all(
+			reservasNuevas.map(reserva => new Reserva(reserva).save())
+		)).map(doc => doc.toObject());
+}
+
+
 	async getEmpleados() { return (await Empleado.find()).map(d => d.toObject()); }
 	async setClientes(clientes) { return (await Promise.all(clientes.map(async u => { return new Cliente(u).save(); }))).map(d =>d.toObject());}
 	async setEmpleados(empleados) { return (await Promise.all(empleados.map(async u => { return new Empleado(u).save(); }))).map(d =>d.toObject());}
@@ -193,60 +203,46 @@ class CarRentalOnline {
 			throw new Error("El empleado con ese id no existe")
 		}
 	}
-	disponibilidad(vehiculoId, inicio, fin) {
+	async disponibilidad(vehiculoId, inicio, fin) {
 
-		const vehiculo = this._vehiculos.find(v => v.id === vehiculoId);
+		const vehiculo = await Vehiculo.findById(vehiculoId);
+            if (!vehiculo) {
+                throw new Error('El vehículo con el ID indicado no existe.');
+            }
 
-		if (!vehiculo) {
-
-			throw new Error('El vehículo con el ID indicado no existe.');
-		}
-
-
-		const reservasDelVehiculo = this._reservas.filter(reserva => reserva.vehiculoId === vehiculoId);
-
-		for (const reserva of reservasDelVehiculo) {
-			if (reserva.inicio <= fin && reserva.fin >= inicio) {
-				return false;
-			}
-		}
-
-		return true;
+            const reservaspilladas = await Reserva.find({
+                vehiculoId: vehiculoId,
+                $or: [
+                    { inicio: { $lte: fin, $gte: inicio } },
+                    { fin: { $gte: inicio, $lte: fin } }
+                ]
+            });
+            return reservaspilladas.length === 0;
 	}
 
-	disponibles(marca, modelo, tipo, etiqueta, costoDia, inicio, fin) {
-		const vehiculosDisponibles = this._vehiculos.filter(vehiculo => {
-		
-		  const tieneReservas = this._reservas.some(reserva => reserva.vehiculoId === vehiculo.id &&
-			reserva.inicio <= fin && reserva.fin >= inicio);
-		  if (tieneReservas) {
-			return false;
-		  }
-	  
-		  if (marca && vehiculo.marca !== marca) {
-			return false;
-		  }
-		  if (modelo && vehiculo.modelo !== modelo) {
-			return false;
-		  }
-		  if (tipo && vehiculo.tipo !== tipo) {
-			return false;
-		  }
-		  if (etiqueta && vehiculo.etiqueta !== etiqueta) {
-			return false;
-		  }
-	  
-		  if (costoDia && vehiculo.costoDia > costoDia) {
-			return false;
-		  }
-	  
-		  return true;
+	async disponibles(marca, modelo, tipo, etiqueta, costoDia, inicio, fin) {
+
+		const reservasEnRango = await Reserva.find({
+			inicio: { $lte: fin },
+			fin: { $gte: inicio }
 		});
-	  
+
+		const nodispo = reservasEnRango.map(reserva => reserva.vehiculoId);
+		const filtros = {
+			...(marca && { marca: marca }),
+			...(modelo && { modelo: modelo }),
+			...(tipo && { tipo: tipo }),
+			...(etiqueta && { etiqueta: etiqueta }),
+			...(costoDia && { costoDia: { $lte: costoDia } }),
+			_id: { $nin: nodispo }
+		};
+
+		const vehiculosDisponibles = await Vehiculo.find(filtros);
 		return vehiculosDisponibles;
-	  }
+    }
+    
 	  
-	  reservar(reserva) {
+	async reservar(reserva) {
 	
 		if (this.usuario === null || this.usuario.rol !== "Cliente") {
 			throw new Error("Debe iniciar sesión como cliente para realizar una reserva");
@@ -256,32 +252,33 @@ class CarRentalOnline {
 			throw new Error("La fecha de inicio debe ser anterior a la fecha de fin");
 		}
 	
-		const fechaActual = new Date();
 		if (reserva.fecha > reserva.inicio) {
 			throw new Error("La fecha de la reserva no debe ser mayor que la fecha de inicio");
 		}
 	
-		const vehiculoDisponible = this.disponibilidad(reserva.vehiculoId, reserva.inicio, reserva.fin);
+		const vehiculoDisponible = await this.disponibilidad(reserva.vehiculoId, reserva.inicio, reserva.fin);
 		if (!vehiculoDisponible) {
 			throw new Error("El vehículo no está disponible en el período especificado");
 		}
-	
-		reserva.id = this.genId();
-		reserva.numero = `R${this.lastid.toString().padStart(3, "0")}`;
-	
-		this._reservas.push(reserva);
-	
-		return reserva;
+
+		const duracion = (reserva.fin - reserva.inicio) / (1000 * 60 * 60 * 24); 
+        reserva.costo = duracion * reserva.costoDia;
+        reserva.costo = Math.round((reserva.costo + Number.EPSILON) * 100) / 100;
+
+		const nuevaReserva = new Reserva(reserva);
+        await nuevaReserva.save();
+
+        return nuevaReserva.toObject();
 	}
 	
-	cancelar(numero) {
-        const reservaIndex = this._reservas.findIndex(reserva => reserva.numero === numero);
+	async cancelar(numero) {
 
-        if (reservaIndex === -1) {
-            throw new Error(`No se encontró una reserva con el número ${numero}`);
-        }
+        const reserva = await Reserva.findOne({ numero: numero });
+            if (!reserva) {
+                throw new Error(`No se encontró una reserva con el número ${numero}`);
+            }
 
-        this._reservas.splice(reservaIndex, 1);
+            await Reserva.findByIdAndDelete(reserva._id);
     }
 
 	reservas(clienteId) {
@@ -296,16 +293,16 @@ class CarRentalOnline {
 
 		return reservasDelCliente;
 	}
-	reservaByNumero(numero) {
-		const reserva = this._reservas.find(reserva => reserva.numero === numero);
+	async reservaByNumero(numero) {
+		 const reserva = await Reserva.findOne({ numero: numero });
+            return reserva || null;
+	}
+	async reservaById(reservaId) {
+		const reserva = await Reserva.findById(reservaId);
 		return reserva || null;
 	}
-	reservaById(reservaId) {
-		const reserva = this._reservas.find(reserva => reserva.id === reservaId);
-		return reserva || null;
-	}
-	reservasByClienteId(clienteId) {
-		const reservasDelCliente = this._reservas.filter(reserva => reserva.clienteId === clienteId);
+	async reservasByClienteId(clienteId) {
+		const reservasDelCliente = await Reserva.find({ clienteId: clienteId });
 		return reservasDelCliente;
 	}
 	setPerfil(perfil){
