@@ -29,8 +29,16 @@ class CarRentalOnline {
 	async getEmpleados() { return (await Empleado.find()).map(d => d.toObject()); }
 	async setClientes(clientes) { return (await Promise.all(clientes.map(async u => { return new Cliente(u).save(); }))).map(d =>d.toObject());}
 	async setEmpleados(empleados) { return (await Promise.all(empleados.map(async u => { return new Empleado(u).save(); }))).map(d =>d.toObject());}
-	async agregarCliente(cliente) { return (await new Cliente(cliente).save()).toObject(); }
-	async agregarEmpleado(empleado) { return (await new Empleado(empleado).save()).toObject(); }
+	async agregarCliente(cliente) { 
+		if (Cliente.find(u=>u.dni==cliente.dni)!=NULL){
+			throw new Error('El cliente con dni :',cliente.dni,'ya existe ');
+		}else{
+		return (await new Cliente(cliente).save()).toObject();}}
+		async agregarEmpleado(empleado) { 
+			if (Empleado.find(u=>u.dni==empleado.dni)!=NULL){
+				throw new Error('El empleado con dni :',empleado.dni,'ya existe ');
+			}else{
+			return (await new Empleado(empleado).save()).toObject();}}
 	async clienteById(uid) {return (await Cliente.findById(uid)).toObject();}
 	async empleadoById(uid) {return (await Empleado.findById(uid)).toObject();}
 
@@ -120,15 +128,15 @@ class CarRentalOnline {
         return vehiculoEncontrado || null;
     }
 	
-	signin(email, password, rol) {
+	async signin(email, password, rol) {
 		
 		let usuarioEncontrado = null;
 		if (rol === "Empleado") {
-			usuarioEncontrado = this._empleados.find(empleado => empleado.email === email && empleado.password === password);
+			usuarioEncontrado = await Empleado.find(empleado => empleado.email === email && empleado.password === password).toObject();
 		} else if (rol === "Cliente") {
 			
 			
-			usuarioEncontrado = this._clientes.find(cliente => cliente.email === email );//&& cliente.password === password);
+			usuarioEncontrado = await this.Cliente.find(cliente => cliente.email === email ).toObject();
 			
 		} else {
 			throw new Error("Rol no válido");
@@ -140,15 +148,15 @@ class CarRentalOnline {
 			throw new Error("Credenciales incorrectas");
 		}
 	}
-	signup(obj) {
+	async signup(obj) {
 
 		if (obj.rol === "Empleado") {
-			const empleadoExistente = this._empleados.find(empleado => empleado.email === obj.email);
+			const empleadoExistente = await Empleado.find(empleado => empleado.email === obj.email);
 			if (empleadoExistente) {
 				throw new Error("El email ya está registrado como empleado");
 			}
 		} else if (obj.rol === "Cliente") {
-			const clienteExistente = this._clientes.find(cliente => cliente.email === obj.email);
+			const clienteExistente = await Cliente.find(cliente => cliente.email === obj.email);
 			if (clienteExistente) {
 				throw new Error("El email ya está registrado como cliente");
 			}
@@ -156,9 +164,9 @@ class CarRentalOnline {
 			throw new Error("Rol no válido");
 		}
 		if (obj.rol === "Empleado") {
-			this._empleados.push(obj);
+			await Empleado.save(obj);
 		} else if (obj.rol === "Cliente") {
-			this._clientes.push(obj);
+			await Cliente.save(obj);
 		}
 	}
 	signout() {
@@ -187,22 +195,8 @@ class CarRentalOnline {
 			throw new Error("El empleado con ese email no existe");
 		}
 	}
-	clienteById(id) {
-		let cliente = this._clientes.find(cliente => cliente.id === id);
-		if (cliente) {
-			return cliente
-		} else {
-			throw new Error("El cliente con ese id no existe")
-		}
-	}
-	empleadoById(id) {
-		let empleado = this._empleados.find(empleado => empleado.id === id);
-		if (empleado) {
-			return empleado
-		} else {
-			throw new Error("El empleado con ese id no existe")
-		}
-	}
+	async clienteById(uid) {return (await Cliente.findById(uid)).toObject();}
+	async empleadoById(uid) {return (await Empleado.findById(uid)).toObject();}
 	async disponibilidad(vehiculoId, inicio, fin) {
 
 		const vehiculo = await Vehiculo.findById(vehiculoId);
@@ -305,10 +299,10 @@ class CarRentalOnline {
 		const reservasDelCliente = await Reserva.find({ clienteId: clienteId });
 		return reservasDelCliente;
 	}
-	setPerfil(perfil){
-		usuarioEncontrado = this._clientes.find(cliente => perfil.email === email && cliente.password === perfil.password);
+	async setPerfil(perfil){
+		usuarioEncontrado = await Cliente.find(cliente => perfil.email === email && cliente.password === perfil.password);
 		if(usuarioEncontrado){
-			return true;
+			Cliente.save(perfil);
 		}
 		return false;
 	}
