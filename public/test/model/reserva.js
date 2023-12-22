@@ -1,3 +1,7 @@
+const mongoose = require('mongoose');
+const Reserva = require("../../model/reserva");
+const cliente = require('../../model/cliente');
+
 describe("Reserva", function () {
   let reserva;
   const id = '1';
@@ -12,16 +16,8 @@ describe("Reserva", function () {
   const vehiculoId = 'V001';
 
   beforeEach(function () {
-    reserva = new Reserva(id);
-    reserva.inicio = inicio;
-    reserva.fin = fin;
-    reserva.costo = costo;
-    reserva.numero = numero;
-    reserva.entrega = entrega;
-    reserva.devolucion = devolucion;
-    reserva.fecha = fecha;
-    reserva.clienteId = clienteId;
-    reserva.vehiculoId = vehiculoId;
+    reserva = new Reserva(inicio,fin,costo,numero,fecha,cliente,vehiculoId)
+  
   });
 
   it("constructor reserva", function () {

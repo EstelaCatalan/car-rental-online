@@ -1,6 +1,12 @@
+const mongoose = require('mongoose');
+const assert = require('assert');
+
 const uri = 'mongodb://127.0.0.1/car-rental-online';
 const Cliente=require("../../model/cliente");
 const Empleado=require("../../model/empleado");
+const Vehiculo = require("../../model/vehiculo");
+const Reserva = require("../../model/reserva");
+
 describe("car-rental-online", function() {
     let carrentalonline;
     let vehiculos = new Array();
@@ -160,6 +166,8 @@ describe("car-rental-online", function() {
     beforeEach( async function() {
         await Cliente.deleteMany();
         await Empleado.deleteMany();
+        await Vehiculo.deleteMany();
+        await Reserva.deleteMany();
         carrentalonline = new CarRentalOnline();
         
 
@@ -204,18 +212,23 @@ describe("car-rental-online", function() {
 
         assert.deepEqual(carrentalonline._vehiculos, vehiculos)
     })
-    it("get reservas", function() {
-        carrentalonline._reservas.push(reserva1);
-        carrentalonline._reservas.push(reserva2);
-        carrentalonline._reservas.push(reserva3);
 
-        const reservasObtenidas = carrentalonline.getReservas();
-
-        assert.equal(reservasObtenidas.length, 3);
+    it("get reservas", async function() {
+   
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve([reserva1, reserva2, reserva3])
+            })
+        );
+    
+        const reservasObtenidas = await carrentalonline.getReservas();
+ 
         assert.deepEqual(reservasObtenidas[0], reserva1);
         assert.deepEqual(reservasObtenidas[1], reserva2);
         assert.deepEqual(reservasObtenidas[2], reserva3);
-    })
+    });
+
     it("agregar clientes", function() {
         carrentalonline.agregarCliente(usuario1);
         clientes1 = new Array();
