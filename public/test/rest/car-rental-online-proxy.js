@@ -229,9 +229,9 @@ describe("car-rental-online-proxy", function () {
         } catch (error) {
             if (error.message === "Rol no válido") {
                 // Realiza acciones si se detecta un rol no válido
-                console.error("Error: Rol no válido");
+                console.log("Error: Rol no válido");
             } else {
-                console.error("Error inesperado:", error.message);
+                console.log("Error inesperado:", error.message);
             }
         }
     
@@ -243,9 +243,9 @@ describe("car-rental-online-proxy", function () {
         } catch (error) {
             if (error.message === "Credenciales incorrectas") {
                 // Realiza acciones si se detectan credenciales incorrectas
-                console.error("Error: Credenciales incorrectas");
+                console.log("Error: Credenciales incorrectas");
             } else {
-                console.error("Error inesperado:", error.message);
+                console.log("Error inesperado:", error.message);
             }
         }
     
@@ -255,7 +255,7 @@ describe("car-rental-online-proxy", function () {
             throw new Error("Usuario no registrado: Se esperaba una excepción pero no fue lanzada");
     
         } catch (error) {
-            console.error("Error: Usuario no registrado");
+            console.log("Error: Usuario no registrado");
         }
     })
     
