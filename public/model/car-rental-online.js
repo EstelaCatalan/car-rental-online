@@ -32,6 +32,10 @@ class CarRentalOnline {
 	async clienteById(uid) {return (await Cliente.findById(uid)).toObject();}
 	async empleadoById(uid) {return (await Empleado.findById(uid)).toObject();}
 
+	async clienteById(uid) {
+		return (await Cliente.findById(uid)).toObject();
+	}
+
 
 
 	agregarVehiculo(obj) {
@@ -308,6 +312,43 @@ class CarRentalOnline {
 			Cliente.save(perfil);
 		}
 		return false;
+	}
+	async entregarVehiculo(numero) {
+		const reserva = await Reserva.findOne({ numero: numero });
+		if (!reserva) {
+			throw new Error(`No se encontró una reserva con el número ${numero}`);
+		}
+
+		const vehiculo = await Vehiculo.findById(reserva.vehiculoId);
+		if (!vehiculo || !vehiculo.disponible) {
+			throw new Error(`El vehículo asociado a la reserva no está disponible para entrega`);
+		}
+
+		vehiculo.disponible = false;
+		reserva.fechaEntrega = new Date();
+
+		await Promise.all([vehiculo.save(), reserva.save()]);
+	}
+	async devolverVehiculo(numero) {
+		const reserva = await Reserva.findOne({ numero: numero });
+		if (!reserva) {
+			throw new Error(`No se encontró una reserva con el número ${numero}`);
+		}
+
+		const vehiculo = await Vehiculo.findById(reserva.vehiculoId);
+		if (!vehiculo || vehiculo.disponible) {
+			throw new Error(`El vehículo asociado a la reserva no está disponible para devolución`);
+		}
+
+		if (!reserva.fechaEntrega) {
+			throw new Error(`La reserva con el número ${numero} no ha sido entregada`);
+		}
+
+		vehiculo.disponible = true;
+		reserva.fechaDevolucion = new Date();
+
+
+		await Promise.all([vehiculo.save(), reserva.save()]);
 	}
 
 }

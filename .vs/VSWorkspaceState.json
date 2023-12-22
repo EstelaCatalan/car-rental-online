@@ -2,11 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\public",
-    "\\public\\css",
-    "\\public\\empleado",
-    "\\public\\invitado",
-    "\\public\\test",
-    "\\public\\test\\model",
+    "\\public\\model",
+    "\\src",
+    "\\src\\model",
     "\\test",
     "\\test\\model",
     "\\test\\rest"
