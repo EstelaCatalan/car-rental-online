@@ -1,3 +1,6 @@
+const uri = 'mongodb://127.0.0.1/car-rental-online';
+const Cliente=require("../../model/cliente");
+const Empleado=require("../../model/empleado");
 describe("car-rental-online", function() {
     let carrentalonline;
     let vehiculos = new Array();
@@ -151,9 +154,14 @@ describe("car-rental-online", function() {
         disponible: true,
         eliminado: true,
     };
-
-    beforeEach(function() {
+    before ( async function(){
+        await mongoose.connect(uri);
+    })
+    beforeEach( async function() {
+        await Cliente.deleteMany();
+        await Empleado.deleteMany();
         carrentalonline = new CarRentalOnline();
+        
 
     })
     it("constructor Car-Rental-Online", function() {
@@ -166,25 +174,25 @@ describe("car-rental-online", function() {
 
     });
     it("get clientes", function() {
-
-        clientes.push(usuario1);
-        clientes.push(usuario2);
-        clientes.push(usuario3);
+        const cliente=[];
+        cliente.push(usuario1);
+        cliente.push(usuario2);
+        cliente.push(usuario3);
         carrentalonline.agregarCliente(usuario1);
         carrentalonline.agregarCliente(usuario2);
         carrentalonline.agregarCliente(usuario3);
-        assert.deepEqual(carrentalonline._clientes, clientes)
+        assert.deepEqual(carrentalonline.getClientes(), cliente);
 
     })
     it("get empleados", function() {
-
-        empleados.push(usuario4);
-        empleados.push(usuario5);
-        empleados.push(usuario6);
+        const empleado=[];
+        empleado.push(usuario4);
+        empleado.push(usuario5);
+        empleado.push(usuario6);
         carrentalonline.agregarEmpleado(usuario4);
         carrentalonline.agregarEmpleado(usuario5);
         carrentalonline.agregarEmpleado(usuario6);
-        assert.deepEqual(carrentalonline._empleados, empleados)
+        assert.deepEqual(carrentalonline.getEmpleados(), empleado);
 
     })
     it("get vehiculos", function() {
