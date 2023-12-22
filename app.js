@@ -1,4 +1,7 @@
-
+var mongoose = require('mongoose');
+var uri = 'mongodb://127.0.0.1/car-rental-online';
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
 const port = 3000;
 const express = require('express')
 const app = express();
@@ -20,6 +23,20 @@ app.listen(port, () => {
 // app.use('/car-rental-online/api', (req, res) => {
 //     res.status(501).send('501 Not Implemented');
 // });
+db.on('connecting', function () {console.log('Connecting to ', uri);});
+db.on('connected', function () {console.log('Connected to ', uri);});
+db.on('disconnecting', function () {console.log('Disconnecting from ', uri);});
+db.on('disconnected', function () {console.log('Disconnected from ', uri);});
+db.on('error', function (err) {console.error('Error ', err.message);});
+(async function () {
+try {
+await mongoose.connect(uri)
+} catch (err) {
+console.error('Error', err.message);
+} finally {
+await mongoose.disconnect();
+}
+})();
 app.get('/car-rental-online/componentes', (req, res) => {
     res.sendFile(__dirname + '/public/components');
 });
